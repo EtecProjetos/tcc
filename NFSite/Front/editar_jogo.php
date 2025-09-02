@@ -1,0 +1,315 @@
+<?php
+include '../back/conexao.php';
+
+$professor_id = 1;
+
+if (!isset($_GET['id'])) {
+    header("Location: jogosprofessor.php");
+    exit();
+}
+
+$jogo_id = intval($_GET['id']);
+
+$stmt = $conn->prepare("SELECT * FROM jogos WHERE id = ? AND professor_id = ?");
+$stmt->bind_param("ii", $jogo_id, $professor_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    echo "Jogo não encontrado ou você não tem permissão.";
+    exit();
+}
+
+$jogo = $result->fetch_assoc();
+$stmt->close();
+
+$turmas = $conn->query("SELECT id, nome FROM turmas");
+
+$alert = null; // 'success' ou 'nochange' ou null
+$message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = $_POST['data'] ?? '';
+    $horario = $_POST['horario'] ?? '';
+    $turma_id = intval($_POST['turma_id'] ?? 0);
+    $local = $_POST['local'] ?? '';
+    $categoria = $_POST['categoria'] ?? '';
+    $adversario = $_POST['adversario'] ?? '';
+    $mandante_post = $_POST['mandante'] ?? 'Não';
+    $mandante = ($mandante_post === 'Sim') ? 1 : 0;
+
+    // Verifica se houve alteração
+    if (
+        $data === $jogo['data'] &&
+        $horario === $jogo['horario'] &&
+        $turma_id === intval($jogo['turma_id']) &&
+        $local === $jogo['local'] &&
+        $categoria === $jogo['categoria'] &&
+        $adversario === $jogo['adversario'] &&
+        $mandante === intval($jogo['mandante'])
+    ) {
+        $alert = 'nochange';
+        $message = 'Nenhuma alteração detectada.';
+    } else {
+        $update = $conn->prepare("UPDATE jogos SET data = ?, horario = ?, turma_id = ?, local = ?, categoria = ?, adversario = ?, mandante = ? WHERE id = ? AND professor_id = ?");
+        $update->bind_param("ssisssiii", $data, $horario, $turma_id, $local, $categoria, $adversario, $mandante, $jogo_id, $professor_id);
+        $update->execute();
+        $update->close();
+
+        $alert = 'success';
+        $message = 'Jogo atualizado com sucesso!';
+
+        // Atualiza valores locais para o formulário
+        $jogo['data'] = $data;
+        $jogo['horario'] = $horario;
+        $jogo['turma_id'] = $turma_id;
+        $jogo['local'] = $local;
+        $jogo['categoria'] = $categoria;
+        $jogo['adversario'] = $adversario;
+        $jogo['mandante'] = $mandante;
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Jogo - Professor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      background-color: #390062;
+      font-family: 'Roboto', Arial, sans-serif;
+      color: #4b0082;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    header.logo-header {
+      margin-bottom: 30px;
+    }
+    header.logo-header .logo {
+      width: 180px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      padding: 30px 35px;
+      box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+      color: #4b0082;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #6f2da8;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #4b0082;
+    }
+
+    input[type="date"],
+    input[type="time"],
+    input[type="text"],
+    select {
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 2px solid #6f2da8;
+      border-radius: 14px;
+      color: #4b0082;
+      transition: border-color 0.3s ease;
+      outline-offset: 2px;
+    }
+
+    input[type="date"]:focus,
+    input[type="time"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #390062;
+      outline: none;
+    }
+
+    button {
+      padding: 18px 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      background-color: #6f2da8;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #551b9a;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 25px;
+      text-decoration: none;
+      color: #6f2da8;
+      font-weight: 700;
+      text-align: center;
+      width: 100%;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: #390062;
+    }
+
+    #alert-box {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 25px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
+    }
+
+    #alert-box.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #alert-box.success {
+      background-color: #28a745;
+    }
+
+    #alert-box.nochange {
+      background-color: #ffc107;
+      color: #333;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      h2 {
+        font-size: 1.6rem;
+      }
+      input[type="date"],
+      input[type="time"],
+      input[type="text"],
+      select,
+      button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="logo-header">
+  <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+</header>
+
+<div class="container">
+  <h2>Editar Jogo</h2>
+
+  <form method="POST" aria-label="Formulário para editar jogo">
+    <label for="data">Data:</label>
+    <input id="data" type="date" name="data" required value="<?= htmlspecialchars($jogo['data']) ?>">
+
+    <label for="horario">Horário:</label>
+    <input id="horario" type="time" name="horario" required value="<?= htmlspecialchars($jogo['horario']) ?>">
+
+    <label for="turma_id">Turma:</label>
+    <select id="turma_id" name="turma_id" required>
+      <option value="">Selecione a turma</option>
+      <?php while ($turma = $turmas->fetch_assoc()): ?>
+        <option value="<?= $turma['id'] ?>" <?= $turma['id'] == $jogo['turma_id'] ? 'selected' : '' ?>>
+          <?= htmlspecialchars($turma['nome']) ?>
+        </option>
+      <?php endwhile; ?>
+    </select>
+
+    <label for="local">Local:</label>
+    <input id="local" type="text" name="local" required value="<?= htmlspecialchars($jogo['local']) ?>">
+
+    <label for="categoria">Categoria:</label>
+    <input id="categoria" type="text" name="categoria" required value="<?= htmlspecialchars($jogo['categoria']) ?>">
+
+    <label for="adversario">Adversário:</label>
+    <input id="adversario" type="text" name="adversario" required value="<?= htmlspecialchars($jogo['adversario']) ?>">
+
+    <label for="mandante">Mandante:</label>
+    <select id="mandante" name="mandante" required>
+      <option value="Sim" <?= ($jogo['mandante'] == 1) ? 'selected' : '' ?>>SIM</option>
+      <option value="Não" <?= ($jogo['mandante'] == 0) ? 'selected' : '' ?>>NÃO</option>
+    </select>
+
+    <button type="submit">Salvar Alterações</button>
+  </form>
+
+  <a href="jogosprofessor.php" class="back-link">← Voltar para Jogos</a>
+</div>
+
+<div id="alert-box"></div>
+
+<script>
+  const alertBox = document.getElementById('alert-box');
+
+  function showAlert(type, message) {
+    alertBox.textContent = message;
+    alertBox.className = '';
+    alertBox.classList.add(type);
+    alertBox.classList.add('show');
+
+    if(type === 'success') {
+      setTimeout(() => {
+        window.location.href = 'jogosprofessor.php';
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+      }, 3000);
+    }
+  }
+
+  <?php if ($alert !== null): ?>
+    showAlert('<?= $alert ?>', '<?= addslashes($message) ?>');
+  <?php endif; ?>
+</script>
+
+</body>
+</html>
