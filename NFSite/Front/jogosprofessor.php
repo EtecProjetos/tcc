@@ -10,7 +10,7 @@ if (!isset($_SESSION['professor_id'])) {
 
 $professor_id = $_SESSION['professor_id'];
 
-// Deleta jogos antigos
+// Deleta jogos antigos automaticamente
 $conn->query("DELETE FROM jogos WHERE data < CURDATE()");
 
 // Inserir novo jogo
@@ -64,8 +64,8 @@ $jogos = $conn->query($sql);
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
 <style>
-/* --- MESMO ESTILO QUE VOCÊ TINHA --- */
-body { margin:0; background-color:#390062; font-family:'Roboto',Arial,sans-serif; color:#4b0082; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 10px; }
+/* --- ESTILO DO SEU SISTEMA --- */
+body { margin:0; background-color:#520c6f; font-family:'Roboto',Arial,sans-serif; color:#4b0082; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 10px; }
 h1 { font-weight:700; font-size:2rem; margin-bottom:30px; color:#6f2da8; text-align:center; }
 .container { background:#fff; border-radius:16px; max-width:900px; width:100%; padding:30px 35px; box-shadow:0 4px 20px rgba(111,45,168,0.3); color:#4b0082; box-sizing:border-box; }
 form { display:flex; flex-wrap:wrap; gap:20px; margin-bottom:40px; justify-content:space-between; }
@@ -167,6 +167,9 @@ a.btn-delete:hover { background:#b8362a; }
 <?php endif; ?>
 </div>
 
-<script src="js/nav_professor.js"></script>
+  <div id="nav-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="js/nav_professor.js"></script>
 </body>
 </html>

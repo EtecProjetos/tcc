@@ -13,7 +13,7 @@
 
         body {
             margin: 0;
-            background-color: #4c0070;
+    background: linear-gradient(135deg, #000000, #4c0070); /* Degradê preto → roxo */
             font-family: Arial, sans-serif;
             color: white;
             display: flex;

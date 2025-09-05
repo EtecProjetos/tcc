@@ -1,7 +1,14 @@
 <?php
+session_start();
 include '../back/conexao.php';
 
+// Verifica se o professor está logado
+if (!isset($_SESSION['professor_id'])) {
+    header("Location: login_professor.php");
+    exit();
+}
 
+$professor_id = $_SESSION['professor_id'];
 
 if (!isset($_GET['id'])) {
     header("Location: treinosprofessor.php");
@@ -10,6 +17,7 @@ if (!isset($_GET['id'])) {
 
 $treino_id = $_GET['id'];
 
+// Busca o treino somente do professor logado
 $stmt = $conn->prepare("
     SELECT t.*, tur.nome AS turma_nome 
     FROM treinos t 
@@ -28,9 +36,13 @@ if ($result->num_rows === 0) {
 $treino = $result->fetch_assoc();
 $stmt->close();
 
-$turmas = $conn->query("SELECT id, nome FROM turmas");
+// Lista apenas turmas do professor logado
+$turmas_stmt = $conn->prepare("SELECT id, nome FROM turmas WHERE professor_id = ?");
+$turmas_stmt->bind_param("i", $professor_id);
+$turmas_stmt->execute();
+$turmas = $turmas_stmt->get_result();
 
-$alert = null; // 'success' ou 'nochange' ou null
+$alert = null;
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -42,7 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $alert = 'nochange';
         $message = 'Nenhuma alteração detectada.';
     } else {
-        $stmt = $conn->prepare("UPDATE treinos SET data = ?, horario = ?, turma_id = ? WHERE id = ? AND professor_id = ?");
+        $stmt = $conn->prepare("UPDATE treinos 
+                                SET data = ?, horario = ?, turma_id = ? 
+                                WHERE id = ? AND professor_id = ?");
         $stmt->bind_param("ssiii", $data, $horario, $turma_id, $treino_id, $professor_id);
         $stmt->execute();
         $stmt->close();
@@ -50,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $alert = 'success';
         $message = 'Treino atualizado com sucesso!';
 
+        // Atualiza os dados exibidos
         $treino['data'] = $data;
         $treino['horario'] = $horario;
         $treino['turma_id'] = $turma_id;
@@ -69,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <style>
     body {
       margin: 0;
-      background-color: #390062;
+      background-color: #520c6f;
       font-family: 'Roboto', Arial, sans-serif;
       color: #4b0082;
       min-height: 100vh;
@@ -241,22 +256,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
   const alertBox = document.getElementById('alert-box');
 
-function showAlert(type, message) {
-  alertBox.textContent = message;
-  alertBox.className = '';
-  alertBox.classList.add(type);
-  alertBox.classList.add('show');
+  function showAlert(type, message) {
+    alertBox.textContent = message;
+    alertBox.className = '';
+    alertBox.classList.add(type);
+    alertBox.classList.add('show');
 
-  if(type === 'success') {
-    setTimeout(() => {
-      window.location.href = 'treinosprofessor.php';
-    }, 1500); // reduzido para 1.5 segundos
-  } else {
-    setTimeout(() => {
-      alertBox.classList.remove('show');
-    }, 3000);
+    if(type === 'success') {
+      setTimeout(() => {
+        window.location.href = 'treinosprofessor.php';
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+      }, 3000);
+    }
   }
-}
 
   <?php if ($alert !== null): ?>
     showAlert('<?= $alert ?>', '<?= addslashes($message) ?>');

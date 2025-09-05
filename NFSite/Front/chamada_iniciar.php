@@ -9,129 +9,84 @@ $stmt->execute();
 $result = $stmt->get_result();
 $turmas = $result->fetch_all(MYSQLI_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Iniciar Chamada</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #390062;
-            color: #fff;
-            margin: 0;
-            padding: 20px 10px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            background: #fff;
-            color: #333;
-            width: 100%;
-            max-width: 480px;
-            border-radius: 16px;
-            padding: 30px 25px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 700;
-            color: #390062;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        label {
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 1rem;
-        }
-        select, input[type="date"] {
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1.5px solid #ccc;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-            width: 100%;
-            color: #333;
-        }
-        select:focus, input[type="date"]:focus {
-            outline: none;
-            border-color: #390062;
-            box-shadow: 0 0 5px #390062aa;
-        }
-        .btn {
-            background-color: #390062;
-            color: white;
-            padding: 14px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-        .btn:hover,
-        .btn:focus {
-            background-color: #5a008a;
-            outline: none;
-        }
-        /* Botão voltar */
-        .btn-voltar {
-            background-color: #ccc;
-            color: #390062;
-            padding: 10px 14px;
-            font-size: 1rem;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 20px;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-        .btn-voltar:hover,
-        .btn-voltar:focus {
-            background-color: #bbb;
-            outline: none;
-        }
-        @media (max-width: 400px) {
-            .container {
-                padding: 20px 15px;
-            }
-            h2 {
-                font-size: 1.5rem;
-            }
-            select, input[type="date"] {
-                font-size: 0.95rem;
-            }
-            .btn {
-                font-size: 1rem;
-                padding: 12px;
-            }
-            .btn-voltar {
-                font-size: 0.95rem;
-                padding: 10px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iniciar Chamada</title>
+<link rel="stylesheet" href="styleBase.css">
+<style>
+body {
+    font-family: 'Fredoka', sans-serif;
+    background-color: #520c6f;
+    color: #fff;
+    margin: 0;
+    padding: 20px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.container {
+    background: linear-gradient(to bottom, #5e2ca5, #7e57c2);
+    width: 100%;
+    max-width: 480px;
+    border-radius: 16px;
+    padding: 30px 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+label {
+    font-weight: 600;
+}
+select, input[type="date"] {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid #fff900;
+    font-size: 1rem;
+    color: #390062;
+}
+select:focus, input[type="date"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px #fff900aa;
+}
+.btn, .btn-voltar {
+    padding: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn {
+    background-color: #fff900;
+    color: #390062;
+}
+.btn:hover { background-color: #ffd700; }
+.btn-voltar {
+    background-color: #ccc;
+    color: #390062;
+    margin-bottom: 20px;
+}
+.btn-voltar:hover { background-color: #bbb; }
+@media (max-width: 400px) {
+    .container { padding: 20px 15px; }
+}
+</style>
 </head>
 <body>
 <div class="container">
-        
-
+    <a href="home_professor.php" class="btn-voltar">← Voltar</a>
     <h2>Iniciar Chamada</h2>
     <form action="chamada.php" method="GET" autocomplete="off">
         <label for="turma_id">Turma:</label>
@@ -141,14 +96,10 @@ $turmas = $result->fetch_all(MYSQLI_ASSOC);
                 <option value="<?= $turma['id'] ?>"><?= htmlspecialchars($turma['nome']) ?></option>
             <?php endforeach; ?>
         </select>
-
         <label for="data">Data da Aula:</label>
         <input type="date" name="data" id="data" required>
-
         <button class="btn" type="submit">Continuar</button>
     </form>
-    <br>
-    <a href="home_professor.php">    <button class="btn-voltar">← Voltar</button></a>
 </div>
 </body>
 </html>

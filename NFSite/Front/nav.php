@@ -19,10 +19,11 @@
     </button>
     <button class="popup-btn" onclick="location.href='frequencia_aluno.php'">
       <i class="bi bi-card-checklist"></i> Frequência
-    </button>
-    <button class="popup-btn" onclick="location.href='index.php'">
-      <i class="bi bi-door-closed-fill"></i> Sair
-    </button>
+<button class="popup-btn" onclick="location.href='logout.php'">
+  <i class="bi bi-door-closed-fill"></i> Sair
+</button>
+
+
   </div>
 </div>
 

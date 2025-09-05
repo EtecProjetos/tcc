@@ -40,7 +40,7 @@ $turmas_para_mudar = $result_turmas->fetch_all(MYSQLI_ASSOC);
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #390062;
+            background-color: #520c6f;
             color: #fff;
             margin: 0;
             padding: 20px;

@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+// Impede cache da página
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+
 // Verifica se o aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
     // Redireciona para a página de login se não estiver logado
@@ -24,6 +28,7 @@ if ($stmt->fetch()) {
 }
 $stmt->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

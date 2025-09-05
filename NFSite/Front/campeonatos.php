@@ -29,6 +29,7 @@ $stmt->bind_param("i", $turma_id);
 $stmt->execute();
 $campeonatos = $stmt->get_result();
 
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

@@ -1,5 +1,16 @@
 <?php
 session_start();
+
+// Impede cache da página
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+
+// Verifica se o aluno está logado
+if (!isset($_SESSION['aluno_id'])) {
+    header("Location: loginAluno.php");
+    exit();
+}
+
 include '../back/conexao.php';
 
 $erro = '';
@@ -21,60 +32,58 @@ function h($str) {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
-    if ($_POST['acao'] === 'atualizar_perfil') {
-        $nome = trim($_POST['nome']);
-        $data_nascimento = $_POST['data_nascimento'];
-        $cpf = trim($_POST['cpf']);
-        $email = trim($_POST['email']);
-        $telefone = trim($_POST['telefone']);
-        $nome_responsavel = trim($_POST['nome_responsavel']);
-        $cpf_responsavel = trim($_POST['cpf_responsavel']);
+// Processa atualização do perfil
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'atualizar_perfil') {
+    $nome = trim($_POST['nome']);
+    $data_nascimento = $_POST['data_nascimento'];
+    $cpf = trim($_POST['cpf']);
+    $email = trim($_POST['email']);
+    $telefone = trim($_POST['telefone']);
+    $nome_responsavel = trim($_POST['nome_responsavel']);
+    $cpf_responsavel = trim($_POST['cpf_responsavel']);
 
-        if (!$nome || !$data_nascimento || !$cpf || !$email) {
-            $_SESSION['mensagem_erro'] = 'Preencha os campos obrigatórios.';
-            header('Location: ' . $_SERVER['PHP_SELF']);
-            exit;
-        }
-
-        $stmt = $conn->prepare("SELECT nome, data_nascimento, cpf, email, telefone, nome_responsavel, cpf_responsavel FROM alunos WHERE id = ?");
-        $stmt->bind_param("i", $aluno_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $dados_atuais = $result->fetch_assoc();
-        $stmt->close();
-
-        $alterou = (
-            $nome !== $dados_atuais['nome'] ||
-            $data_nascimento !== $dados_atuais['data_nascimento'] ||
-            $cpf !== $dados_atuais['cpf'] ||
-            $email !== $dados_atuais['email'] ||
-            $telefone !== $dados_atuais['telefone'] ||
-            $nome_responsavel !== $dados_atuais['nome_responsavel'] ||
-            $cpf_responsavel !== $dados_atuais['cpf_responsavel']
-        );
-
-        if ($alterou) {
-            $stmt = $conn->prepare("UPDATE alunos SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=?, nome_responsavel=?, cpf_responsavel=? WHERE id=?");
-            $stmt->bind_param("sssssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $nome_responsavel, $cpf_responsavel, $aluno_id);
-
-            if ($stmt->execute()) {
-                $_SESSION['mensagem_sucesso'] = 'Perfil atualizado com sucesso!';
-            } else {
-                $_SESSION['mensagem_erro'] = 'Erro ao atualizar o perfil: ' . $conn->error;
-            }
-            $stmt->close();
-        } else {
-            $_SESSION['mensagem_erro'] = 'Nenhuma alteração detectada.';
-        }
-
+    if (!$nome || !$data_nascimento || !$cpf || !$email) {
+        $_SESSION['mensagem_erro'] = 'Preencha os campos obrigatórios.';
         header('Location: ' . $_SERVER['PHP_SELF']);
         exit;
     }
+
+    $stmt = $conn->prepare("SELECT nome, data_nascimento, cpf, email, telefone, nome_responsavel, cpf_responsavel FROM alunos WHERE id = ?");
+    $stmt->bind_param("i", $aluno_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $dados_atuais = $result->fetch_assoc();
+    $stmt->close();
+
+    $alterou = (
+        $nome !== $dados_atuais['nome'] ||
+        $data_nascimento !== $dados_atuais['data_nascimento'] ||
+        $cpf !== $dados_atuais['cpf'] ||
+        $email !== $dados_atuais['email'] ||
+        $telefone !== $dados_atuais['telefone'] ||
+        $nome_responsavel !== $dados_atuais['nome_responsavel'] ||
+        $cpf_responsavel !== $dados_atuais['cpf_responsavel']
+    );
+
+    if ($alterou) {
+        $stmt = $conn->prepare("UPDATE alunos SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=?, nome_responsavel=?, cpf_responsavel=? WHERE id=?");
+        $stmt->bind_param("sssssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $nome_responsavel, $cpf_responsavel, $aluno_id);
+        if ($stmt->execute()) {
+            $_SESSION['mensagem_sucesso'] = 'Perfil atualizado com sucesso!';
+        } else {
+            $_SESSION['mensagem_erro'] = 'Erro ao atualizar o perfil: ' . $conn->error;
+        }
+        $stmt->close();
+    } else {
+        $_SESSION['mensagem_erro'] = 'Nenhuma alteração detectada.';
+    }
+
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
 }
 
-$sql = "SELECT * FROM alunos WHERE id = ?";
-$stmt = $conn->prepare($sql);
+// Busca dados do aluno
+$stmt = $conn->prepare("SELECT * FROM alunos WHERE id = ?");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -84,6 +93,7 @@ $stmt->close();
 if (!$aluno) {
     die("Aluno não encontrado.");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +111,7 @@ if (!$aluno) {
   <link rel="stylesheet" href="styles/styleBase.css">
 <style>
 body {
-    background-color: #4c0070;
+    background-color: #520c6f;
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -144,7 +154,7 @@ input[type=password] {
     box-sizing: border-box;
 }
 
-input[type=submit], button {
+.btn_salvar{
     margin-top: 20px;
     background-color: #ffd700;
     border: none;
@@ -160,7 +170,7 @@ input[type=submit], button {
 
 input[type=submit]:hover, button:hover {
     background-color: #ffe34d;
-}
+} 
 
 .msg-error, .msg-success {
     text-align: center;
@@ -168,22 +178,22 @@ input[type=submit]:hover, button:hover {
     padding: 12px;
     border-radius: 12px;
     font-weight: bold;
-}
-.msg-error {
+} 
+ .msg-error {
     background-color: #a80000;
     color: white;
 }
 .msg-success {
     background-color: #2e8b57;
     color: white;
-}
+} 
 
-@media (max-width: 650px) {
+ @media (max-width: 650px) {
     .container {
         margin: 15px 15px 100px 15px;
         padding: 15px 20px 30px 20px;
     }
-}
+} 
 </style>
 </head>
 <body>
@@ -221,36 +231,13 @@ input[type=submit]:hover, button:hover {
         <label for="cpf_responsavel">CPF do Responsável</label>
         <input type="text" id="cpf_responsavel" name="cpf_responsavel" maxlength="14" placeholder="000.000.000-00" value="<?= h($aluno['cpf_responsavel']) ?>" />
 
-        <input type="submit" value="Salvar Alterações" />
+        <input type="submit" class="btn_salvar" value="Salvar Alterações" />
     </form>
 </div>
-<div id="nav-placeholder"></div>
+  <div id="nav-placeholder"></div>
 
-  <script>
-    fetch("nav.php")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("nav-placeholder").innerHTML = data;
-
-        // Reativar scripts do menu lateral após carregar
-        const btnToggle = document.getElementById("btn-toggle-popup");
-        const btnClose = document.getElementById("btn-close-popup");
-        const popupMenu = document.getElementById("popup-menu");
-
-        if (btnToggle && btnClose && popupMenu) {
-          btnToggle.addEventListener("click", () => {
-            popupMenu.classList.toggle("open");
-            popupMenu.setAttribute("aria-hidden", popupMenu.classList.contains("open") ? "false" : "true");
-          });
-
-          btnClose.addEventListener("click", () => {
-            popupMenu.classList.remove("open");
-            popupMenu.setAttribute("aria-hidden", "true");
-          });
-        }
-      });
-  </script>
-
+  <!-- Script externo para controle da navbar -->
+  <script src="js/nav.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const msg = document.querySelector('.msg-error') || document.querySelector('.msg-success');

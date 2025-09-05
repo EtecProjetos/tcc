@@ -13,7 +13,7 @@ session_start();
     <style>
         * { box-sizing: border-box; }
         body {
-            margin: 0; background-color: #4c0070; font-family: Arial, sans-serif; color: white;
+            margin: 0;     background: linear-gradient(135deg, #000000, #4c0070); /* Degradê preto → roxo */; font-family: Arial, sans-serif; color: white;
             display: flex; justify-content: center; align-items: center; height: 100vh; padding: 15px;
         }
         .login-container {
