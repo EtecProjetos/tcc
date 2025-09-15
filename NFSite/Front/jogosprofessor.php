@@ -64,34 +64,301 @@ $jogos = $conn->query($sql);
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
 <style>
-/* --- ESTILO DO SEU SISTEMA --- */
-body { margin:0; background-color:#520c6f; font-family:'Roboto',Arial,sans-serif; color:#4b0082; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 10px; }
-h1 { font-weight:700; font-size:2rem; margin-bottom:30px; color:#6f2da8; text-align:center; }
-.container { background:#fff; border-radius:16px; max-width:900px; width:100%; padding:30px 35px; box-shadow:0 4px 20px rgba(111,45,168,0.3); color:#4b0082; box-sizing:border-box; }
-form { display:flex; flex-wrap:wrap; gap:20px; margin-bottom:40px; justify-content:space-between; }
-form label { flex:1 0 100%; font-weight:500; margin-bottom:8px; }
-form input[type="date"], form input[type="time"], form input[type="text"], form select { flex:1 1 calc(33% - 15px); padding:14px 16px; font-size:16px; border:2px solid #6f2da8; border-radius:14px; color:#4b0082; box-sizing:border-box; }
-form input:focus, form select:focus { border-color:#390062; outline:none; }
-form button { flex:1 0 100%; padding:18px 0; font-size:1.2rem; font-weight:700; background-color:#6f2da8; color:white; border:none; border-radius:20px; cursor:pointer; box-shadow:0 4px 15px rgba(111,45,168,0.5); }
-form button:hover { background-color:#551b9a; }
-.table-wrapper { overflow-x:auto; -webkit-overflow-scrolling:touch; box-shadow:0 4px 20px rgba(111,45,168,0.3); border-radius:16px; background:#fff; padding:15px 20px; }
-.table-wrapper::-webkit-scrollbar { height:8px; }
-.table-wrapper::-webkit-scrollbar-thumb { background:#6f2da8; border-radius:10px; }
-.table-wrapper::-webkit-scrollbar-track { background:#eee; border-radius:10px; }
-table { width:100%; border-collapse:separate; border-spacing:0 14px; min-width:800px; }
-thead { background-color:#6f2da8; color:white; font-weight:700; position:sticky; top:0; }
-th, td { padding:16px 14px; text-align:center; background-color:#fdf7ff; color:#4b0082; font-weight:600; box-shadow:0 3px 8px rgba(111,45,168,0.12); }
-img.logo { height:40px; border-radius:5px; object-fit:contain; max-width:100%; }
-td:last-child { display:flex; justify-content:center; gap:12px; flex-wrap:nowrap; overflow-x:auto; }
-a.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:12px; font-weight:700; font-size:14px; color:white; text-decoration:none; min-width:90px; justify-content:center; }
-a.btn-edit { background:#2980b9; }
-a.btn-edit:hover { background:#1c5980; }
-a.btn-delete { background:#e74c3c; }
-a.btn-delete:hover { background:#b8362a; }
-.empty { text-align:center; color:#aaa; font-size:1.3rem; padding:40px 0; }
-@media(max-width:720px){ form input, form select { flex:1 0 100%; } th, td { font-size:14px; padding:12px 8px; } a.btn { font-size:13px; padding:7px 12px; } }
-@media(max-width:480px){ table, thead, tbody, th, td, tr { display:block; } thead tr { display:none; } tbody tr { margin-bottom:20px; background:#fdf7ff; border-radius:16px; padding:15px 20px; box-shadow:0 3px 12px rgba(111,45,168,0.15); } tbody td { display:flex; justify-content:space-between; padding:10px 0; border:none; box-shadow:none; } tbody td::before { content:attr(data-label); font-weight:700; color:#6f2da8; flex:1 0 40%; } }
+/* ================= Geral ================= */
+body {
+    margin: 0;
+    background-color: #520c6f;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #4b0082;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+}
+
+/* Títulos */
+h1, h2 {
+    font-weight: 700;
+    text-align: center;
+    color: #6f2da8;
+    margin-bottom: 25px;
+}
+
+/* Container principal */
+.container {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 900px;
+    width: 100%;
+    padding: 30px 35px;
+    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+    color: #4b0082;
+    box-sizing: border-box;
+}
+
+/* ================= Formulário ================= */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 40px;
+    justify-content: space-between;
+}
+
+form label {
+    flex: 1 0 100%;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+form input[type="date"],
+form input[type="time"],
+form input[type="text"],
+form select {
+    flex: 1 1 calc(33% - 15px);
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 2px solid #6f2da8;
+    border-radius: 14px;
+    color: #4b0082;
+    box-sizing: border-box;
+}
+
+form input:focus,
+form select:focus {
+    border-color: #390062;
+    outline: none;
+}
+
+form button {
+    flex: 1 0 100%;
+    padding: 18px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background-color: #6f2da8;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
+    transition: background 0.3s;
+}
+
+form button:hover {
+    background-color: #551b9a;
+}
+
+/* ================= Tabela ================= */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+    border-radius: 16px;
+    background: #fff;
+    padding: 15px 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 14px;
+    min-width: 800px;
+}
+
+thead {
+    background-color: #6f2da8;
+    color: white;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+}
+
+th, td {
+    padding: 16px 14px;
+    text-align: center;
+    background-color: #fdf7ff;
+    color: #4b0082;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(111, 45, 168, 0.12);
+}
+
+img.logo {
+    height: 40px;
+    border-radius: 5px;
+    object-fit: contain;
+    max-width: 100%;
+}
+
+td:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+/* Botões de ação */
+a.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+    min-width: 90px;
+    justify-content: center;
+}
+
+a.btn-edit {
+    background: #2980b9;
+}
+
+a.btn-edit:hover {
+    background: #1c5980;
+}
+
+a.btn-delete {
+    background: #e74c3c;
+}
+
+a.btn-delete:hover {
+    background: #b8362a;
+}
+
+.empty {
+    text-align: center;
+    color: #aaa;
+    font-size: 1.3rem;
+    padding: 40px 0;
+}
+
+/* ================= Navbar Inferior ================= */
+.icon-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-shadow: none;
+    z-index: 999;
+}
+
+.nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff900;
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    transition: transform 0.2s, background-color 0.2s;
+    text-decoration: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.nav-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+/* ================= Popup Lateral ================= */
+.popup-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 16px 0 0 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 1000;
+    box-shadow: -5px 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.popup-menu.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.popup-close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-bottom: 15px;
+}
+
+.popup-close-btn:hover {
+    color: #ffd700;
+}
+
+.popup-btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+}
+
+.popup-btn {
+    flex: none;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 0 16px;
+    background: #FFD700;
+    border: none;
+    border-radius: 12px;
+    color: #4b0082;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.popup-btn i {
+    font-size: 20px;
+}
+
+.popup-btn:hover {
+    background-color: #ffe34d;
+    transform: translateX(5px);
+}
+
+/* ================= Responsividade ================= */
+@media(max-width:720px){
+    form input, form select { flex:1 0 100%; }
+    th, td { font-size:14px; padding:12px 8px; }
+    a.btn { font-size:13px; padding:7px 12px; }
+}
+
+@media(max-width:480px){
+    table, thead, tbody, th, td, tr { display:block; }
+    thead tr { display:none; }
+    tbody tr { margin-bottom:20px; background:#fdf7ff; border-radius:16px; padding:15px 20px; box-shadow:0 3px 12px rgba(111,45,168,0.15); }
+    tbody td { display:flex; justify-content:space-between; padding:10px 0; border:none; box-shadow:none; }
+    tbody td::before { content:attr(data-label); font-weight:700; color:#6f2da8; flex:1 0 40%; }
+}
 </style>
+
 </head>
 <body>
 <div class="container">

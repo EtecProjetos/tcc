@@ -57,251 +57,209 @@ $treinos = $conn->query($sql);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   
-  <style>
-    body {
-      margin: 0;
-      background-color: #520c6f;
-      font-family: 'Roboto', Arial, sans-serif;
-      color: #4b0082;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 10px;
-    }
+<style>
+/* --- Estilo Geral --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    /* REMOVE display:flex e align-items */
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+}
 
-    header.logo-header {
-      margin-bottom: 30px;
-    }
-    header.logo-header .logo {
-      width: 180px;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }
+/* Header com logo */
+.logo-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+}
+.logo {
+    width: 130px;
+    height: auto;
+}
 
-    .container {
-      background: #fff;
-      border-radius: 16px;
-      max-width: 720px;
-      width: 100%;
-      padding: 30px 35px;
-      box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
-      color: #4b0082;
-      box-sizing: border-box;
-    }
+/* Container principal */
+.container {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 720px;
+    width: 90%;
+    padding: 30px 35px;
+    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+    color: #4b0082;
+    box-sizing: border-box;
+    margin: 20px auto; /* centraliza horizontalmente */
+}
+/* Títulos */
+h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #000000ff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
 
-    h1 {
-      text-align: center;
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 30px;
-      color: #6f2da8;
-    }
+/* Formulário */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 40px;
+    justify-content: space-between;
+}
+form label {
+    flex: 1 0 100%;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #fff;
+}
+form input[type="date"],
+form input[type="time"],
+form select {
+    flex: 1 1 calc(33% - 15px);
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 2px solid #000000ff;
+    border-radius: 14px;
+    color: #4b0082;
+    outline-offset: 2px;
+    background: #fff;
+}
+form input:focus,
+form select:focus {
+    border-color: #000000ff;
+}
+form button {
+    flex: 1 0 100%;
+    padding: 18px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background-color: #ffd700;
+    color: #4b0082;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background-color 0.3s;
+}
+form button:hover {
+    background-color: #ffe345ff;
+    transform: translateY(-3px);
+}
 
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 40px;
-      justify-content: space-between;
-    }
-    form label {
-      flex: 1 0 100%;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: #4b0082;
-    }
-    form input[type="date"],
-    form input[type="time"],
-    form select {
-      flex: 1 1 calc(33% - 15px);
-      padding: 14px 16px;
-      font-size: 16px;
-      border: 2px solid #6f2da8;
-      border-radius: 14px;
-      color: #4b0082;
-      transition: border-color 0.3s ease;
-      outline-offset: 2px;
-    }
-    form input[type="date"]:focus,
-    form input[type="time"]:focus,
-    form select:focus {
-      border-color: #390062;
-      outline: none;
-    }
-    form button {
-      flex: 1 0 100%;
-      padding: 18px 0;
-      font-size: 1.2rem;
-      font-weight: 700;
-      background-color: #6f2da8;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
-      transition: background-color 0.3s ease;
-    }
-    form button:hover {
-      background-color: #551b9a;
-    }
+/* Tabela */
+.table-wrapper {
+    overflow-x:auto;
+    border-radius:16px;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 14px;
+}
+thead {
+    background-color: rgba(0,0,0,0.4);
+    color: #fff;
+    font-weight: 700;
+}
+th, td {
+    padding: 14px 10px;
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+    color: #4b0082;
+    font-weight: 600;
+    border-radius: 12px;
+}
+td:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
 
-    /* Tabela */
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 14px;
-      box-sizing: border-box;
+/* Botões da tabela */
+a.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: transform 0.2s, background-color 0.3s;
+}
+a.btn-edit {
+    background-color: #ffe600;
+    color: #4b0082;
+}
+a.btn-edit:hover {
+    background-color: #fff35d;
+    transform: translateY(-2px);
+}
+a.btn-delete {
+    background-color: #e74c3c;
+    color: #fff;
+}
+a.btn-delete:hover {
+    background-color: #ff5b5b;
+    transform: translateY(-2px);
+}
+
+/* Mensagem vazio */
+.empty {
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 40px 0;
+    color: #ffd700;
+}
+
+/* Responsividade */
+@media(max-width:720px){
+    form input, form select {
+        flex:1 0 100%;
     }
-    thead {
-      background-color: #6f2da8;
-      color: white;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      display: table-header-group;
+    td, th {
+        font-size:14px;
+        padding:10px 8px;
     }
-    th, td {
-      padding: 16px 14px;
-      text-align: center;
-      font-weight: 600;
-      background-color: #fdf7ff;
-      color: #4b0082;
-      box-shadow: 0 3px 8px rgba(111, 45, 168, 0.12);
-      vertical-align: middle;
-      min-width: 120px;
-    }
-    th {
-      border-radius: 10px 10px 0 0;
-    }
+}
+@media(max-width:480px){
+    table, thead, tbody, th, td, tr { display:block; }
+    thead tr { display:none; }
     tbody tr {
-      background: #fdf7ff;
-      border-radius: 16px;
-      box-shadow: 0 3px 8px rgba(111, 45, 168, 0.1);
+        margin-bottom:15px;
+        padding:15px 20px;
+        border-radius:16px;
+        box-shadow:0 3px 12px rgba(0,0,0,0.15);
+        background: rgba(255,255,255,0.9);
     }
     tbody td {
-      border-bottom: 14px solid transparent;
-    }
-
-    td:last-child {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    a.btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 14px;
-      color: white;
-      text-decoration: none;
-      user-select: none;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      min-width: 90px;
-      justify-content: center;
-    }
-    a.btn-edit {
-      background: #2980b9;
-    }
-    a.btn-edit:hover {
-      background: #1c5980;
-    }
-    a.btn-delete {
-      background: #e74c3c;
-    }
-    a.btn-delete:hover {
-      background: #b8362a;
-    }
-
-    .empty {
-      text-align: center;
-      color: #aaa;
-      font-size: 1.3rem;
-      padding: 40px 0;
-    }
-
-    /* Responsividade */
-    @media (max-width: 720px) {
-      form input[type="date"],
-      form input[type="time"],
-      form select {
-        flex: 1 0 100%;
-      }
-      th, td {
-        min-width: 90px;
-        padding: 12px 8px;
-        font-size: 14px;
-      }
-      a.btn {
-        font-size: 13px;
-        padding: 7px 12px;
-        min-width: 80px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      /* Form ajustado para mobile */
-      form {
-        gap: 15px;
-      }
-      form button {
-        padding: 14px 0;
-        font-size: 1rem;
-      }
-
-      /* Tabela modo lista */
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      thead tr {
-        display: none;
-      }
-      tbody tr {
-        margin-bottom: 15px;
-        background: #fdf7ff;
-        border-radius: 16px;
-        padding: 15px 20px;
-        box-shadow: 0 3px 12px rgba(111, 45, 168, 0.15);
-      }
-      tbody td {
-        padding: 8px 8px 8px 110px;
+        padding-left: 120px;
         position: relative;
         text-align: left;
-        border: none;
-        box-shadow: none;
-        font-weight: 500;
-        word-wrap: break-word;
-        white-space: normal;
-      }
-      tbody td:last-child {
-        padding-left: 0;
-        display: flex;
-        justify-content: flex-start;
-        gap: 12px;
-        margin-top: 10px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      tbody td::before {
+    }
+    tbody td::before {
         content: attr(data-label);
         position: absolute;
         left: 20px;
         top: 50%;
         transform: translateY(-50%);
-        font-weight: 700;
-        color: #6f2da8;
-        white-space: nowrap;
-      }
+        font-weight:700;
+        color:#ffe600;
     }
-  </style>
+}
+html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+</style>
 </head>
 <body>
 

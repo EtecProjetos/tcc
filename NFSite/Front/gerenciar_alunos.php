@@ -339,11 +339,9 @@ $turmas_para_mudar = $result_turmas->fetch_all(MYSQLI_ASSOC);
             conteudo.innerHTML = `
                 <p><strong>Nome:</strong> ${aluno.nome}</p>
                 <p><strong>Data de Nascimento:</strong> ${aluno.data_nascimento}</p>
-                <p><strong>CPF:</strong> ${aluno.cpf}</p>
                 <p><strong>Email:</strong> ${aluno.email}</p>
                 <p><strong>Telefone:</strong> ${aluno.telefone || 'Não informado'}</p>
                 <p><strong>Responsável:</strong> ${aluno.nome_responsavel || 'Não informado'}</p>
-                <p><strong>CPF do Responsável:</strong> ${aluno.cpf_responsavel || 'Não informado'}</p>
             `;
 
             abrirModal('modalInfo');
