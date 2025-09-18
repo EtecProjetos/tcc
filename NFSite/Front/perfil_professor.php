@@ -33,7 +33,7 @@ function h($str) {
 }
 
 // Processa atualização do perfil
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'atualizar_perfil') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'atualizar_perfil') {
     $nome = trim($_POST['nome']);
     $data_nascimento = $_POST['data_nascimento'];
     $cpf = trim($_POST['cpf']);
@@ -96,99 +96,166 @@ if (!$professor) {
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Perfil do Professor</title>
+<title>Perfil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles/styleBase.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
 <style>
 body {
-    background-color: #520c6f;
-    color: white;
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding-bottom: 120px;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    font-family: 'Roboto', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+    color: #4b0082;
+}
+
+header.logo-header {
+    margin-bottom: 30px;
+}
+header.logo-header .logo {
+    width: 180px;
+    display: block;
+    margin: 0 auto;
 }
 
 .container {
-    max-width: 600px;
-    margin: 30px auto 100px auto;
-    background-color: #7a0ea4;
-    border-radius: 15px;
-    padding: 20px 30px 40px 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    text-align: left;
+    background: #fff;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 100%;
+    padding: 30px 35px;
+    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+    color: #4b0082;
+    box-sizing: border-box;
 }
 
 h1 {
     text-align: center;
+    font-weight: 700;
     margin-bottom: 25px;
-    font-weight: bold;
+    color: #6f2da8;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
 }
 
 label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
+    font-weight: 500;
+    color: #4b0082;
+    margin-top: 20px; /* espaçamento entre campos */
 }
 
 input[type=text],
 input[type=date],
 input[type=email],
 input[type=tel] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1em;
-    box-sizing: border-box;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 2px solid #6f2da8;
+    border-radius: 14px;
+    color: #4b0082;
+    margin-top: 8px;
+    outline-offset: 2px;
 }
 
-.btn_salvar{
-    margin-top: 20px;
+input[type=text]:focus,
+input[type=date]:focus,
+input[type=email]:focus,
+input[type=tel]:focus {
+    border-color: #390062;
+    outline: none;
+}
+
+.btn_salvar {
+    margin-top: 25px;
     background-color: #ffd700;
     border: none;
     color: #4b0082;
-    font-weight: bold;
-    font-size: 1.2em;
-    padding: 12px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 14px 0;
     border-radius: 25px;
     cursor: pointer;
     width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     transition: background-color 0.3s ease;
 }
+.btn_salvar:hover {
+    background-color: #ffe345ff;
+}
 
-input[type=submit]:hover, button:hover {
-    background-color: #ffe34d;
-} 
+.btn_voltar {
+    display: inline-block;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #4b0082;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 25px;
+    background-color: #e0d600;
+    transition: background-color 0.3s ease;
+}
+.btn_voltar:hover {
+    background-color: #d4c500;
+}
 
 .msg-error, .msg-success {
     text-align: center;
     margin-bottom: 20px;
     padding: 12px;
     border-radius: 12px;
-    font-weight: bold;
-} 
-.msg-error {
-    background-color: #a80000;
-    color: white;
+    font-weight: 700;
 }
-.msg-success {
-    background-color: #2e8b57;
-    color: white;
-} 
+.msg-error { background-color: #a80000; color: white; }
+.msg-success { background-color: #28a745; color: white; }
 
-@media (max-width: 650px) {
-    .container {
-        margin: 15px 15px 100px 15px;
-        padding: 15px 20px 30px 20px;
+@media (max-width: 480px) {
+    .container { padding: 20px; }
+    h1 { font-size: 1.6rem; }
+    input[type=text],
+    input[type=date],
+    input[type=email],
+    input[type=tel],
+    .btn_salvar,
+    .btn_voltar {
+        font-size: 14px;
     }
-} 
+}
+.back-link {
+    display: block;           /* bloco para centralizar */
+    margin: 25px auto 0 auto; /* 25px de margin-top e centralizado horizontalmente */
+    text-decoration: none;
+    color: #6f2da8;
+    font-weight: 700;
+    text-align: center;
+    width: fit-content;       /* ajusta a largura ao conteúdo */
+    padding: 12px 20px;       /* deixa mais clicável */
+    border-radius: 25px;
+    user-select: none;
+
+
+}
+.back-link:hover {
+    color: #000000ff;
+   
+}
+
 </style>
 </head>
 <body>
+
+<header class="logo-header">
+    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+</header>
 
 <div class="container">
     <h1>Perfil</h1>
@@ -202,28 +269,29 @@ input[type=submit]:hover, button:hover {
     <form method="post" action="">
         <input type="hidden" name="acao" value="atualizar_perfil" />
 
-        <label for="nome">Nome *</label>
+        <label for="nome">Nome</label>
         <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($professor['nome']) ?>" />
 
-        <label for="data_nascimento">Data de Nascimento *</label>
+        <label for="data_nascimento">Data de Nascimento</label>
         <input type="date" id="data_nascimento" name="data_nascimento" required value="<?= h($professor['data_nascimento']) ?>" />
 
-        <label for="cpf">CPF *</label>
+        <label for="cpf">CPF</label>
         <input type="text" id="cpf" name="cpf" required maxlength="14" placeholder="000.000.000-00" value="<?= h($professor['cpf']) ?>" />
 
-        <label for="email">E-mail *</label>
+        <label for="email">E-mail </label>
         <input type="email" id="email" name="email" required maxlength="100" value="<?= h($professor['email']) ?>" />
 
         <label for="telefone">Telefone</label>
         <input type="tel" id="telefone" name="telefone" maxlength="20" value="<?= h($professor['telefone']) ?>" />
 
         <input type="submit" class="btn_salvar" value="Salvar Alterações" />
-    </form>
-</div>
-  <div id="nav-placeholder"></div>
+        <!-- Dentro do form ou abaixo dele -->
+<a href="home_professor.php" class="back-link">← Voltar para Treinos</a>
 
-  <!-- Scripts -->
-  <script src="js/nav_professor.js"></script>
+    </form>
+
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const msg = document.querySelector('.msg-error') || document.querySelector('.msg-success');

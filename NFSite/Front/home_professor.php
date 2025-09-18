@@ -28,10 +28,11 @@ $stmt->close();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>New Football - Professor</title>
+  <title>Home</title>
 
   <link rel="stylesheet" href="styles/styleHomeProfessor.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 </head>
 <body>
 

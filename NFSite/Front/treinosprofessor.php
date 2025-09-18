@@ -33,10 +33,10 @@ if (isset($_GET['excluir'])) {
     exit();
 }
 
-// Buscar apenas turmas do professor logado
+// Buscar turmas do professor logado
 $t_result = $conn->query("SELECT id, nome FROM turmas WHERE professor_id = $professor_id");
 
-// Buscar apenas treinos do professor logado
+// Buscar treinos do professor logado
 $sql = "
 SELECT t.id, t.data, t.horario, tur.nome AS turma_nome
 FROM treinos t
@@ -46,19 +46,23 @@ ORDER BY t.data DESC, t.horario DESC
 ";
 $treinos = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Gerenciar Treinos - Professor</title>
+  <title>Treinos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Ícones -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-  
-<style>
-/* --- Estilo Geral --- */
+
+  <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+
+  <style>
 body {
     margin: 0;
     padding: 0;
@@ -66,13 +70,8 @@ body {
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: #ffffff;
     min-height: 100vh;
-    /* REMOVE display:flex e align-items */
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
 }
 
-/* Header com logo */
 .logo-header {
     display: flex;
     justify-content: center;
@@ -84,7 +83,6 @@ body {
     height: auto;
 }
 
-/* Container principal */
 .container {
     background: #fff;
     border-radius: 16px;
@@ -93,16 +91,14 @@ body {
     padding: 30px 35px;
     box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
     color: #4b0082;
-    box-sizing: border-box;
-    margin: 20px auto; /* centraliza horizontalmente */
+    margin: 20px auto;
 }
-/* Títulos */
 h1 {
     text-align: center;
     font-weight: 700;
     font-size: 2rem;
     margin-bottom: 30px;
-    color: #000000ff;
+    color: #000;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
@@ -126,15 +122,10 @@ form select {
     flex: 1 1 calc(33% - 15px);
     padding: 14px 16px;
     font-size: 16px;
-    border: 2px solid #000000ff;
+    border: 2px solid #000;
     border-radius: 14px;
     color: #4b0082;
-    outline-offset: 2px;
     background: #fff;
-}
-form input:focus,
-form select:focus {
-    border-color: #000000ff;
 }
 form button {
     flex: 1 0 100%;
@@ -150,15 +141,12 @@ form button {
     transition: transform 0.2s, background-color 0.3s;
 }
 form button:hover {
-    background-color: #ffe345ff;
+    background-color: #ffe345;
     transform: translateY(-3px);
 }
 
 /* Tabela */
-.table-wrapper {
-    overflow-x:auto;
-    border-radius:16px;
-}
+.table-wrapper { overflow-x:auto; border-radius:16px; }
 table {
     width: 100%;
     border-collapse: separate;
@@ -196,21 +184,31 @@ a.btn {
     transition: transform 0.2s, background-color 0.3s;
 }
 a.btn-edit {
-    background-color: #ffe600;
+    background-color: #ffd700;
     color: #4b0082;
 }
 a.btn-edit:hover {
-    background-color: #fff35d;
+    background-color: #ffe345;
     transform: translateY(-2px);
 }
-a.btn-delete {
-    background-color: #e74c3c;
-    color: #fff;
+.btn-delete {
+  background-color: #ff0000ff; /* Roxo */
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-a.btn-delete:hover {
-    background-color: #ff5b5b;
-    transform: translateY(-2px);
+
+.btn-delete:hover {
+  background-color: #ff0000ff; /* Roxo mais escuro */
+  color: white;
+  transform: scale(1.1);
 }
+
+/* Garante que o ícone dentro do botão fique sempre branco */
+.btn-delete i {
+  color: white !important;
+}
+
 
 /* Mensagem vazio */
 .empty {
@@ -222,13 +220,8 @@ a.btn-delete:hover {
 
 /* Responsividade */
 @media(max-width:720px){
-    form input, form select {
-        flex:1 0 100%;
-    }
-    td, th {
-        font-size:14px;
-        padding:10px 8px;
-    }
+    form input, form select { flex:1 0 100%; }
+    td, th { font-size:14px; padding:10px 8px; }
 }
 @media(max-width:480px){
     table, thead, tbody, th, td, tr { display:block; }
@@ -252,14 +245,10 @@ a.btn-delete:hover {
         top: 50%;
         transform: translateY(-50%);
         font-weight:700;
-        color:#ffe600;
+        color:#6a0dad;
     }
 }
-html, body {
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-</style>
+  </style>
 </head>
 <body>
 
@@ -270,7 +259,8 @@ html, body {
 <div class="container">
   <h1>Gerenciar Treinos</h1>
 
-  <form method="POST" aria-label="Formulário para adicionar novo treino">
+  <!-- Formulário -->
+  <form method="POST">
     <label for="data">Data do Treino:</label>
     <input id="data" type="date" name="data" required />
 
@@ -288,14 +278,15 @@ html, body {
     <button type="submit">Adicionar Treino</button>
   </form>
 
+  <!-- Tabela -->
   <?php if ($treinos->num_rows > 0): ?>
-    <table role="table" aria-label="Tabela de treinos cadastrados">
+    <table>
       <thead>
         <tr>
-          <th scope="col">Data</th>
-          <th scope="col">Horário</th>
-          <th scope="col">Turma</th>
-          <th scope="col">Ações</th>
+          <th>Data</th>
+          <th>Horário</th>
+          <th>Turma</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -305,19 +296,51 @@ html, body {
             <td data-label="Horário"><?= date('H:i', strtotime($t['horario'])) ?></td>
             <td data-label="Turma"><?= htmlspecialchars($t['turma_nome']) ?></td>
             <td>
-              <a href="editar_treino.php?id=<?= $t['id'] ?>" class="btn btn-edit" aria-label="Editar treino"><i class="bi bi-pencil-square"></i></a>
-              <a href="?excluir=<?= $t['id'] ?>" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir este treino?')" aria-label="Excluir treino"><i class="bi bi-trash"></i></a>
+              <a href="editar_treino.php?id=<?= $t['id'] ?>" class="btn btn-edit"><i class="bi bi-pencil-square"></i></a>
+              <a href="#" class="btn btn-delete" onclick="openDeleteModal(<?= $t['id'] ?>)"><i class="bi bi-trash"></i></a>
             </td>
           </tr>
         <?php endwhile; ?>
       </tbody>
     </table>
   <?php else: ?>
-    <p class="empty" role="alert">Nenhum treino cadastrado</p>
+    <p class="empty">Nenhum treino cadastrado</p>
   <?php endif; ?>
 </div>
 
-<div id="nav-placeholder"></div>
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header" style="background-color:#6a0dad; color:#ffd700;">
+        <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill"></i> Confirmar Exclusão</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        Tem certeza que deseja excluir este treino?<br>
+        <strong style="color:#6a0dad;">Esta ação não poderá ser desfeita.</strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" style="background:#ffd700; color:#4b0082;" data-bs-dismiss="modal">Cancelar</button>
+        <a id="confirmDeleteBtn" href="#" class="btn" style="background:#6a0dad; color:#fff;">Excluir</a>
+      </div>
+    </div>
+  </div>
+</div>
+  <div id="nav-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="js/nav_professor.js"></script>
+
 <script src="js/nav_professor.js"></script>
+<script>
+function openDeleteModal(id) {
+  const deleteUrl = "?excluir=" + id;
+  document.getElementById("confirmDeleteBtn").setAttribute("href", deleteUrl);
+  const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+  modal.show();
+}
+
+</script>
 </body>
 </html>

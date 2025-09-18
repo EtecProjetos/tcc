@@ -15,72 +15,108 @@ $turmas = $result->fetch_all(MYSQLI_ASSOC);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Iniciar Chamada</title>
-<link rel="stylesheet" href="styleBase.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 <style>
 body {
-    font-family: 'Fredoka', sans-serif;
-    background-color: #520c6f;
-    color: #fff;
     margin: 0;
-    padding: 20px 10px;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    padding: 20px 10px;
+    color: #4b0082;
 }
+
 .container {
-    background: linear-gradient(to bottom, #5e2ca5, #7e57c2);
-    width: 100%;
-    max-width: 480px;
+    background: #fff;
     border-radius: 16px;
-    padding: 30px 25px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    max-width: 500px;
+    width: 100%;
+    padding: 30px 35px;
+    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+    color: #4b0082;
+    box-sizing: border-box;
 }
+
 h2 {
     text-align: center;
-    margin-bottom: 30px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #6f2da8;
 }
+
 form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
+
 label {
-    font-weight: 600;
+    font-weight: 500;
+    color: #4b0082;
+    margin-top: 20px;
 }
+
 select, input[type="date"] {
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 2px solid #fff900;
-    font-size: 1rem;
-    color: #390062;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 2px solid #6f2da8;
+    border-radius: 14px;
+    color: #4b0082;
+    margin-top: 8px;
+    outline-offset: 2px;
 }
+
 select:focus, input[type="date"]:focus {
+    border-color: #390062;
     outline: none;
-    box-shadow: 0 0 5px #fff900aa;
+    box-shadow: 0 0 5px #390062aa;
 }
-.btn, .btn-voltar {
-    padding: 14px;
-    font-size: 1.1rem;
+
+button, .btn-voltar {
+    padding: 14px 0;
+    font-size: 1.2rem;
     font-weight: 700;
-    border-radius: 10px;
+    border-radius: 25px;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 25px;
 }
-.btn {
-    background-color: #fff900;
-    color: #390062;
+
+button {
+    background-color: #ffd700;
+    color: #4b0082;
 }
-.btn:hover { background-color: #ffd700; }
+
+button:hover {
+    background-color: #ffe345;
+}
+
 .btn-voltar {
-    background-color: #ccc;
-    color: #390062;
-    margin-bottom: 20px;
+
+    color: #4b0082;
+    text-decoration: none;
+    text-align: center;
 }
-.btn-voltar:hover { background-color: #bbb; }
-@media (max-width: 400px) {
-    .container { padding: 20px 15px; }
+
+.btn-voltar:hover {
+    color: #000000;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    h2 {
+        font-size: 1.6rem;
+    }
+    select, input[type="date"], button, .btn-voltar {
+        font-size: 14px;
+    }
 }
 </style>
 </head>
@@ -96,9 +132,11 @@ select:focus, input[type="date"]:focus {
                 <option value="<?= $turma['id'] ?>"><?= htmlspecialchars($turma['nome']) ?></option>
             <?php endforeach; ?>
         </select>
+
         <label for="data">Data da Aula:</label>
         <input type="date" name="data" id="data" required>
-        <button class="btn" type="submit">Continuar</button>
+
+        <button type="submit">Continuar</button>
     </form>
 </div>
 </body>

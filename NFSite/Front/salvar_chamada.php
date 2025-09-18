@@ -39,15 +39,70 @@ while($aluno = $result->fetch_assoc()) {
 <head>
 <meta charset="UTF-8" />
 <title>Chamada Salva</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-body { background:#520c6f; font-family:'Roboto',sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; color:#fff;}
-.card { background:#fff; color:#390062; padding:30px 40px; border-radius:20px; text-align:center; box-shadow:0 6px 15px rgba(57,0,98,0.4); max-width:400px;}
-.loading-dots { font-size:18px; font-weight:bold; color:#390062;}
-.loading-dots span { opacity:0; animation:blink 1.4s infinite both; display:inline-block;}
-.loading-dots span:nth-child(1) { animation-delay:0s;}
-.loading-dots span:nth-child(2) { animation-delay:0.2s;}
-.loading-dots span:nth-child(3) { animation-delay:0.4s;}
-@keyframes blink {0%,20%{opacity:0;}50%{opacity:1;}100%{opacity:0;}}
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    color: #4b0082;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+}
+
+.card {
+    background: #fff;
+    color: #390062;
+    padding: 30px 35px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(111,45,168,0.4);
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #6f2da8;
+}
+
+p {
+    margin: 10px 0;
+}
+
+.loading-dots {
+    font-size: 18px;
+    font-weight: bold;
+    color: #390062;
+}
+
+.loading-dots span {
+    opacity: 0;
+    animation: blink 1.4s infinite both;
+    display: inline-block;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: 0s; }
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+    0%, 20% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@media (max-width: 480px) {
+    .card { padding: 25px 20px; }
+    h2 { font-size: 1.6rem; }
+    .loading-dots { font-size: 16px; }
+}
 </style>
 <script>
 setTimeout(()=>{ window.location.href='chamada_iniciar.php'; },3000);
@@ -55,9 +110,9 @@ setTimeout(()=>{ window.location.href='chamada_iniciar.php'; },3000);
 </head>
 <body>
 <div class="card">
-<h2>Sucesso!</h2>
-<p>A chamada foi salva com sucesso.</p>
-<p class="loading-dots">Aguarde<span>.</span><span>.</span><span>.</span></p>
+    <h2>Sucesso!</h2>
+    <p>A chamada foi salva com sucesso.</p>
+    <p class="loading-dots">Aguarde<span>.</span><span>.</span><span>.</span></p>
 </div>
 </body>
 </html>

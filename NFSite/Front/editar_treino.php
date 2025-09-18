@@ -76,15 +76,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Editar Treino - Professor</title>
+  <title>Editar Treino</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+  
 
   <style>
     body {
       margin: 0;
-      background-color: #520c6f;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
       font-family: 'Roboto', Arial, sans-serif;
       color: #4b0082;
       min-height: 100vh;
@@ -149,16 +151,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       padding: 18px 0;
       font-size: 1.2rem;
       font-weight: 700;
-      background-color: #6f2da8;
-      color: white;
+      background-color: #ffd700;
+    color: #4b0082;
       border: none;
       border-radius: 20px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       transition: background-color 0.3s ease;
     }
     button:hover {
-      background-color: #551b9a;
+      background-color: #ffe345ff;
     }
     .back-link {
       display: inline-block;
@@ -223,6 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <header class="logo-header">
   <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+  
 </header>
 
 <div class="container">

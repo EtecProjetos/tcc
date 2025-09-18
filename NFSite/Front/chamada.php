@@ -21,29 +21,120 @@ $alunos = $result->fetch_all(MYSQLI_ASSOC);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <title>Registrar Presença</title>
-    <style>
-        body { background-color:#520c6f; font-family:'Roboto',sans-serif; margin:0; padding:0; color:#fff; }
-        .container { background:#fff; max-width:700px; margin:30px auto; padding:20px; border-radius:16px; color:#333; }
-        h2 { text-align:center; margin-bottom:15px; }
-        table { width:100%; margin-top:20px; border-collapse:collapse; }
-        th,td { padding:12px; text-align:left; }
-        tr:nth-child(even) { background:#f2f2f2; }
-        .btn { margin-top:20px; background-color:#390062; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer; width:100%; font-size:16px; font-weight:bold; transition:background-color 0.3s; }
-        .btn:hover { background-color:#5a008a; }
-        .btn-voltar { background-color:#ccc; color:#390062; padding:10px; font-size:1rem; border-radius:10px; border:none; cursor:pointer; font-weight:600; width:100%; margin-bottom:20px; transition: background-color 0.3s ease; }
-        .btn-voltar:hover { background-color:#bbb; }
-        .summary { margin-top:15px; font-weight:600; font-size:16px; color:#390062; }
-    </style>
+<meta charset="UTF-8" />
+<title>Chamada</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+<style>
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    color: #4b0082;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+}
+
+.container {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 700px;
+    width: 100%;
+    padding: 30px 35px;
+    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+    color: #4b0082;
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #6f2da8;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    color: #390062;
+}
+
+tr:nth-child(even) { background: #f2f2f2; }
+
+.presenca-checkbox {
+    width: 18px;
+    height: 18px;
+}
+
+.btn, .btn-voltar {
+    padding: 14px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #ffd700;
+    color: #4b0082;
+}
+
+.btn:hover {
+    background-color: #ffe345;
+}
+
+.btn-voltar {
+    color: #4b0082;
+    text-decoration: none;
+}
+
+.btn-voltar:hover {
+    color: #000000;
+}
+
+.summary {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #390062;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .container { padding: 20px; }
+    h2 { font-size: 1.6rem; }
+    table th, table td { font-size: 14px; }
+    .btn, .btn-voltar { font-size: 14px; padding: 12px 0; }
+}
+</style>
 </head>
 <body>
 <div class="container">
+    <a href="chamada_iniciar.php" class="btn-voltar">← Voltar</a>
     <h2>Chamada - <?= date('d/m/Y', strtotime($data)) ?></h2>
-
-    <a href="chamada_iniciar.php">
-        <button type="button" class="btn-voltar">← Voltar</button>
-    </a>
 
     <form action="salvar_chamada.php" method="POST" id="formChamada">
         <input type="hidden" name="turma_id" value="<?= $turma_id ?>">
@@ -77,17 +168,17 @@ $alunos = $result->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <script>
-    const checkboxes = document.querySelectorAll('.presenca-checkbox');
-    const summary = document.getElementById('summary');
+const checkboxes = document.querySelectorAll('.presenca-checkbox');
+const summary = document.getElementById('summary');
 
-    function atualizarResumo() {
-        let presentes = 0;
-        checkboxes.forEach(cb => { if(cb.checked) presentes++; });
-        summary.textContent = `Presentes: ${presentes} | Ausentes: ${checkboxes.length - presentes}`;
-    }
+function atualizarResumo() {
+    let presentes = 0;
+    checkboxes.forEach(cb => { if(cb.checked) presentes++; });
+    summary.textContent = `Presentes: ${presentes} | Ausentes: ${checkboxes.length - presentes}`;
+}
 
-    checkboxes.forEach(cb => cb.addEventListener('change', atualizarResumo));
-    atualizarResumo();
+checkboxes.forEach(cb => cb.addEventListener('change', atualizarResumo));
+atualizarResumo();
 </script>
 </body>
 </html>

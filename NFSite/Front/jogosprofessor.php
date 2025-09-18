@@ -57,386 +57,293 @@ $jogos = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Gerenciar Jogos</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <title>Gerenciar Jogos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
-<style>
-/* ================= Geral ================= */
-body {
-    margin: 0;
-    background-color: #520c6f;
-    font-family: 'Roboto', Arial, sans-serif;
-    color: #4b0082;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 10px;
-}
+    <style>
+        /* ================= Geral ================= */
+        body {
+            margin: 0;
+            background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #4b0082;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+        }
 
-/* Títulos */
-h1, h2 {
-    font-weight: 700;
-    text-align: center;
-    color: #6f2da8;
-    margin-bottom: 25px;
-}
+        /* Títulos */
+        h1, h2 {
+            font-weight: 700;
+            text-align: center;
+            color: #6f2da8;
+            margin-bottom: 25px;
+        }
 
-/* Container principal */
-.container {
-    background: #fff;
-    border-radius: 16px;
-    max-width: 900px;
-    width: 100%;
-    padding: 30px 35px;
-    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
-    color: #4b0082;
-    box-sizing: border-box;
-}
+        /* Container principal */
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            padding: 30px 35px;
+            box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+            color: #4b0082;
+            box-sizing: border-box;
+        }
 
-/* ================= Formulário ================= */
-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 40px;
-    justify-content: space-between;
-}
+        /* ================= Formulário ================= */
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+            justify-content: space-between;
+        }
 
-form label {
-    flex: 1 0 100%;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
+        form label {
+            flex: 1 0 100%;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
 
-form input[type="date"],
-form input[type="time"],
-form input[type="text"],
-form select {
-    flex: 1 1 calc(33% - 15px);
-    padding: 14px 16px;
-    font-size: 16px;
-    border: 2px solid #6f2da8;
-    border-radius: 14px;
-    color: #4b0082;
-    box-sizing: border-box;
-}
+        form input[type="date"],
+        form input[type="time"],
+        form input[type="text"],
+        form select {
+            flex: 1 1 calc(33% - 15px);
+            padding: 14px 16px;
+            font-size: 16px;
+            border: 2px solid #6f2da8;
+            border-radius: 14px;
+            color: #4b0082;
+            box-sizing: border-box;
+        }
 
-form input:focus,
-form select:focus {
-    border-color: #390062;
-    outline: none;
-}
+        form input:focus,
+        form select:focus {
+            border-color: #390062;
+            outline: none;
+        }
 
-form button {
-    flex: 1 0 100%;
-    padding: 18px 0;
-    font-size: 1.2rem;
-    font-weight: 700;
-    background-color: #6f2da8;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
-    transition: background 0.3s;
-}
+        form button {
+            flex: 1 0 100%;
+            padding: 18px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background-color: #6f2da8;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(111, 45, 168, 0.5);
+            transition: background 0.3s;
+        }
 
-form button:hover {
-    background-color: #551b9a;
-}
+        form button:hover {
+            background-color: #551b9a;
+        }
 
-/* ================= Tabela ================= */
-.table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
-    border-radius: 16px;
-    background: #fff;
-    padding: 15px 20px;
-}
+        /* ================= Tabela ================= */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 4px 20px rgba(111, 45, 168, 0.3);
+            border-radius: 16px;
+            background: #fff;
+            padding: 15px 20px;
+        }
 
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 14px;
-    min-width: 800px;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-thead {
-    background-color: #6f2da8;
-    color: white;
-    font-weight: 700;
-    position: sticky;
-    top: 0;
-}
+        thead {
+            background-color: #6f2da8;
+            color: white;
+            font-weight: 700;
+        }
 
-th, td {
-    padding: 16px 14px;
-    text-align: center;
-    background-color: #fdf7ff;
-    color: #4b0082;
-    font-weight: 600;
-    box-shadow: 0 3px 8px rgba(111, 45, 168, 0.12);
-}
+        th, td {
+            padding: 18px 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-weight: 500;
+        }
 
-img.logo {
-    height: 40px;
-    border-radius: 5px;
-    object-fit: contain;
-    max-width: 100%;
-}
+        thead th:first-child { border-top-left-radius: 14px; }
+        thead th:last-child { border-top-right-radius: 14px; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background-color: #f0e9f8; }
 
-td:last-child {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
+        img.logo {
+            height: 40px;
+            border-radius: 5px;
+            object-fit: contain;
+            max-width: 100%;
+        }
 
-/* Botões de ação */
-a.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 14px;
-    color: white;
-    text-decoration: none;
-    min-width: 90px;
-    justify-content: center;
-}
+        .actions-cell {
+            display: flex;
+            justify-content: flex-start;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
 
-a.btn-edit {
-    background: #2980b9;
-}
+        /* Botões de ação */
+        a.btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
 
-a.btn-edit:hover {
-    background: #1c5980;
-}
+        a.btn-edit { background: #2980b9; }
+        a.btn-edit:hover { background: #1c5980; }
 
-a.btn-delete {
-    background: #e74c3c;
-}
+        a.btn-delete { background: #e74c3c; }
+        a.btn-delete:hover { background: #b8362a; }
 
-a.btn-delete:hover {
-    background: #b8362a;
-}
+        .empty {
+            text-align: center;
+            color: #aaa;
+            font-size: 1.3rem;
+            padding: 40px 0;
+        }
 
-.empty {
-    text-align: center;
-    color: #aaa;
-    font-size: 1.3rem;
-    padding: 40px 0;
-}
+  
 
-/* ================= Navbar Inferior ================= */
-.icon-navbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: transparent;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    box-shadow: none;
-    z-index: 999;
-}
+    
 
-.nav-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff900;
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
-    margin: 0;
-    transition: transform 0.2s, background-color 0.2s;
-    text-decoration: none;
-    border-radius: 50%;
-    cursor: pointer;
-}
+        /* ================= Responsividade ================= */
+        @media(max-width:720px){
+            form input, form select { flex:1 0 100%; }
+        }
 
-.nav-icon:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateY(-5px);
-}
-
-/* ================= Popup Lateral ================= */
-.popup-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 250px;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.85);
-    border-radius: 16px 0 0 16px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.4s ease, opacity 0.4s ease;
-    transform: translateX(100%);
-    opacity: 0;
-    z-index: 1000;
-    box-shadow: -5px 0 12px rgba(0, 0, 0, 0.5);
-}
-
-.popup-menu.open {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.popup-close-btn {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 28px;
-    cursor: pointer;
-    align-self: flex-end;
-    margin-bottom: 15px;
-}
-
-.popup-close-btn:hover {
-    color: #ffd700;
-}
-
-.popup-btn-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    justify-content: center;
-}
-
-.popup-btn {
-    flex: none;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 0 16px;
-    background: #FFD700;
-    border: none;
-    border-radius: 12px;
-    color: #4b0082;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-}
-
-.popup-btn i {
-    font-size: 20px;
-}
-
-.popup-btn:hover {
-    background-color: #ffe34d;
-    transform: translateX(5px);
-}
-
-/* ================= Responsividade ================= */
-@media(max-width:720px){
-    form input, form select { flex:1 0 100%; }
-    th, td { font-size:14px; padding:12px 8px; }
-    a.btn { font-size:13px; padding:7px 12px; }
-}
-
-@media(max-width:480px){
-    table, thead, tbody, th, td, tr { display:block; }
-    thead tr { display:none; }
-    tbody tr { margin-bottom:20px; background:#fdf7ff; border-radius:16px; padding:15px 20px; box-shadow:0 3px 12px rgba(111,45,168,0.15); }
-    tbody td { display:flex; justify-content:space-between; padding:10px 0; border:none; box-shadow:none; }
-    tbody td::before { content:attr(data-label); font-weight:700; color:#6f2da8; flex:1 0 40%; }
-}
-</style>
+        @media(max-width:600px){
+            .table-wrapper { padding: 10px; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { display: none; }
+            tbody tr {
+                margin-bottom: 20px;
+                background: #fdf7ff;
+                border-radius: 16px;
+                padding: 15px 20px;
+                box-shadow: 0 3px 12px rgba(111, 45, 168, 0.15);
+                border: 2px solid #6f2da8;
+            }
+            tbody td {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 0;
+                border: none;
+                box-shadow: none;
+            }
+            tbody td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: #6f2da8;
+                flex: 1 0 40%;
+                text-align: left;
+            }
+            .actions-cell {
+                justify-content: center;
+                margin-top: 10px;
+            }
+            a.btn { font-size: 13px; padding: 7px 12px; }
+        }
+    </style>
 
 </head>
 <body>
 <div class="container">
-<h1>Adicionar Novo Jogo</h1>
-<form method="POST">
-    <label for="data">Data:</label>
-    <input type="date" id="data" name="data" required>
+    <h1>Adicionar Novo Jogo</h1>
+    <form method="POST">
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" required>
 
-    <label for="horario">Horário:</label>
-    <input type="time" id="horario" name="horario" required>
+        <label for="horario">Horário:</label>
+        <input type="time" id="horario" name="horario" required>
 
-    <label for="categoria">Categoria:</label>
-    <input type="text" id="categoria" name="categoria" required>
+        <label for="categoria">Categoria:</label>
+        <input type="text" id="categoria" name="categoria" required>
 
-    <label for="local">Local:</label>
-    <input type="text" id="local" name="local" required>
+        <label for="local">Local:</label>
+        <input type="text" id="local" name="local" required>
 
-    <label for="adversario">Adversário:</label>
-    <input type="text" id="adversario" name="adversario" required>
+        <label for="adversario">Adversário:</label>
+        <input type="text" id="adversario" name="adversario" required>
 
-    <label for="logo_url">URL da Logo do Adversário:</label>
-    <input type="text" id="logo_url" name="logo_url" required>
+        <label for="logo_url">URL da Logo do Adversário:</label>
+        <input type="text" id="logo_url" name="logo_url" required>
 
-    <label for="turma_id">Turma:</label>
-    <select id="turma_id" name="turma_id" required>
-        <option value="">Selecione a turma</option>
-        <?php while ($turma = $turmas_result->fetch_assoc()): ?>
-            <option value="<?= $turma['id'] ?>"><?= htmlspecialchars($turma['nome']) ?></option>
-        <?php endwhile; ?>
-    </select>
+        <label for="turma_id">Turma:</label>
+        <select id="turma_id" name="turma_id" required>
+            <option value="">Selecione a turma</option>
+            <?php while ($turma = $turmas_result->fetch_assoc()): ?>
+                <option value="<?= $turma['id'] ?>"><?= htmlspecialchars($turma['nome']) ?></option>
+            <?php endwhile; ?>
+        </select>
 
-    <button type="submit">Adicionar Jogo</button>
-</form>
+        <button type="submit">Adicionar Jogo</button>
+    </form>
 
-<h2 style="text-align:center; color:#6f2da8;">Lista de Jogos Cadastrados</h2>
+    <h2 style="text-align:center; color:#6f2da8;">Lista de Jogos Cadastrados</h2>
 
-<?php if ($jogos->num_rows > 0): ?>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr>
-    <th>Data</th>
-    <th>Horário</th>
-    <th>Categoria</th>
-    <th>Local</th>
-    <th>Adversário</th>
-    <th>Logo</th>
-    <th>Turma</th>
-    <th>Ações</th>
-</tr>
-</thead>
-<tbody>
-<?php while ($j = $jogos->fetch_assoc()): ?>
-<tr>
-    <td data-label="Data"><?= date('d/m/Y', strtotime($j['data'])) ?></td>
-    <td data-label="Horário"><?= date('H:i', strtotime($j['horario'])) ?></td>
-    <td data-label="Categoria"><?= strtoupper($j['categoria']) ?></td>
-    <td data-label="Local"><?= strtoupper($j['local']) ?></td>
-    <td data-label="Adversário"><?= strtoupper($j['adversario']) ?></td>
-    <td data-label="Logo"><img src="<?= htmlspecialchars($j['logo_url']) ?>" class="logo" alt="Logo do adversário"></td>
-    <td data-label="Turma"><?= strtoupper($j['turma_nome']) ?></td>
-    <td data-label="Ações">
-        <a href="editar_jogo.php?id=<?= $j['id'] ?>" class="btn btn-edit"><i class="bi bi-pencil-square"></i> Editar</a>
-        <a href="?excluir=<?= $j['id'] ?>" class="btn btn-delete" onclick="return confirm('Deseja excluir este jogo?')"><i class="bi bi-trash"></i> Excluir</a>
-    </td>
-</tr>
-<?php endwhile; ?>
-</tbody>
-</table>
+    <?php if ($jogos->num_rows > 0): ?>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Categoria</th>
+                        <th>Local</th>
+                        <th>Adversário</th>
+                        <th>Logo</th>
+                        <th>Turma</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($j = $jogos->fetch_assoc()): ?>
+                        <tr>
+                            <td data-label="Data"><?= date('d/m/Y', strtotime($j['data'])) ?></td>
+                            <td data-label="Horário"><?= date('H:i', strtotime($j['horario'])) ?></td>
+                            <td data-label="Categoria"><?= strtoupper($j['categoria']) ?></td>
+                            <td data-label="Local"><?= strtoupper($j['local']) ?></td>
+                            <td data-label="Adversário"><?= strtoupper($j['adversario']) ?></td>
+                            <td data-label="Logo"><img src="<?= htmlspecialchars($j['logo_url']) ?>" class="logo" alt="Logo do adversário"></td>
+                            <td data-label="Turma"><?= strtoupper($j['turma_nome']) ?></td>
+                            <td data-label="Ações" class="actions-cell">
+                                <a href="editar_jogo.php?id=<?= $j['id'] ?>" class="btn btn-edit"><i class="bi bi-pencil-square"></i> Editar</a>
+                                <a href="?excluir=<?= $j['id'] ?>" class="btn btn-delete" onclick="return confirm('Deseja excluir este jogo?')"><i class="bi bi-trash"></i> Excluir</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <p class="empty">Nenhum jogo cadastrado.</p>
+    <?php endif; ?>
 </div>
-<?php else: ?>
-<p class="empty">Nenhum jogo cadastrado.</p>
-<?php endif; ?>
-</div>
 
-  <div id="nav-placeholder"></div>
+<div id="nav-placeholder"></div>
 
-  <!-- Scripts -->
-  <script src="js/nav_professor.js"></script>
+<script src="js/nav_professor.js"></script>
 </body>
 </html>
