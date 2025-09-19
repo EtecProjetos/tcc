@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $local = $_POST['local'] ?? '';
     $categoria = $_POST['categoria'] ?? '';
     $adversario = $_POST['adversario'] ?? '';
+    $tipo = $_POST['tipo'] ?? '';  // Campo tipo
 
     if (
         $data === $jogo['data'] &&
@@ -54,25 +55,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $turma_id === intval($jogo['turma_id']) &&
         $local === $jogo['local'] &&
         $categoria === $jogo['categoria'] &&
-        $adversario === $jogo['adversario']
+        $adversario === $jogo['adversario'] &&
+        $tipo === $jogo['tipo']  // Verifica se o tipo foi alterado
     ) {
         $alert = 'nochange';
         $message = 'Nenhuma alteração detectada.';
     } else {
-        $update = $conn->prepare("UPDATE jogos SET data=?, horario=?, turma_id=?, local=?, categoria=?, adversario=? WHERE id=? AND professor_id=?");
-        $update->bind_param("ssisssii", $data, $horario, $turma_id, $local, $categoria, $adversario, $jogo_id, $professor_id);
+        $update = $conn->prepare("UPDATE jogos SET data=?, horario=?, turma_id=?, local=?, categoria=?, adversario=?, tipo=? WHERE id=? AND professor_id=?");
+$update->bind_param("ssissssii", $data, $horario, $turma_id, $local, $categoria, $adversario, $tipo, $jogo_id, $professor_id);
+
         $update->execute();
         $update->close();
 
         $alert = 'success';
         $message = 'Jogo atualizado com sucesso!';
 
+        // Atualiza os dados do jogo após a alteração
         $jogo['data'] = $data;
         $jogo['horario'] = $horario;
         $jogo['turma_id'] = $turma_id;
         $jogo['local'] = $local;
         $jogo['categoria'] = $categoria;
         $jogo['adversario'] = $adversario;
+        $jogo['tipo'] = $tipo;
     }
 }
 ?>
@@ -88,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 
 <style>
+/* ================= Geral ================= */
 body {
     margin:0;
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
@@ -99,8 +105,17 @@ body {
     align-items:center;
     padding:20px 10px;
 }
-header.logo-header{margin-bottom:30px;}
-header.logo-header .logo{width:180px; display:block; margin:0 auto;}
+
+/* Títulos */
+h2{
+    text-align:center;
+    font-weight:700;
+    font-size:2rem;
+    margin-bottom:30px;
+    color:#6f2da8;
+}
+
+/* Container principal */
 .container{
     background:#fff;
     border-radius:16px;
@@ -110,15 +125,19 @@ header.logo-header .logo{width:180px; display:block; margin:0 auto;}
     box-shadow:0 4px 20px rgba(111,45,168,0.3);
     color:#4b0082;
 }
-h2{
-    text-align:center;
-    font-weight:700;
-    font-size:2rem;
-    margin-bottom:30px;
-    color:#6f2da8;
+
+/* ================= Formulário ================= */
+form{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
 }
-form{display:flex; flex-direction:column; gap:20px;}
-label{font-weight:500; color:#4b0082;}
+
+label{
+    font-weight:500;
+    color:#4b0082;
+}
+
 input[type="date"], input[type="time"], input[type="text"], select{
     padding:14px 16px;
     font-size:16px;
@@ -128,10 +147,12 @@ input[type="date"], input[type="time"], input[type="text"], select{
     transition:border-color 0.3s ease;
     outline-offset:2px;
 }
+
 input[type="date"]:focus, input[type="time"]:focus, input[type="text"]:focus, select:focus{
     border-color:#390062;
     outline:none;
 }
+
 button{
     padding:18px 0;
     font-size:1.2rem;
@@ -144,10 +165,12 @@ button{
     box-shadow:0 4px 15px rgba(0,0,0,0.3);
     transition:transform 0.2s, background-color 0.3s;
 }
+
 button:hover{
     background-color:#ffe345;
     transform:translateY(-3px);
 }
+
 .back-link{
     display:inline-block;
     margin-top:25px;
@@ -159,7 +182,10 @@ button:hover{
     user-select:none;
     transition:color 0.3s ease;
 }
+
 .back-link:hover{color:#390062;}
+
+/* Alerta */
 #alert-box{
     position:fixed;
     top:20px;
@@ -178,13 +204,29 @@ button:hover{
     text-align:center;
     box-shadow:0 4px 15px rgba(111,45,168,0.5);
 }
+
 #alert-box.show{opacity:1; pointer-events:auto;}
+
 #alert-box.success{background-color:#28a745;}
 #alert-box.nochange{background-color:#ffc107; color:#333;}
+
+/* ================= Responsividade ================= */
 @media(max-width:480px){
     .container{padding:20px;}
     h2{font-size:1.6rem;}
     input[type="date"], input[type="time"], input[type="text"], select, button{font-size:14px;}
+}
+.logo-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+
+}
+
+.logo {
+    width: 130px;
+    height: auto;
 }
 </style>
 </head>
@@ -208,7 +250,7 @@ button:hover{
     <select id="turma_id" name="turma_id" required>
       <option value="">Selecione a turma</option>
       <?php while($turma = $turmas->fetch_assoc()): ?>
-        <option value="<?= $turma['id'] ?>" <?= $turma['id']==$jogo['turma_id']?'selected':'' ?>>
+        <option value="<?= $turma['id'] ?>" <?= $turma['id'] == $jogo['turma_id'] ? 'selected' : '' ?>>
           <?= htmlspecialchars($turma['nome']) ?>
         </option>
       <?php endwhile; ?>
@@ -222,6 +264,12 @@ button:hover{
 
     <label for="adversario">Adversário:</label>
     <input id="adversario" type="text" name="adversario" required value="<?= htmlspecialchars($jogo['adversario']) ?>">
+
+    <label for="tipo">Tipo de Jogo:</label>
+    <select id="tipo" name="tipo" required>
+      <option value="Amistoso" <?= $jogo['tipo'] === 'Amistoso' ? 'selected' : '' ?>>Amistoso</option>
+      <option value="Oficial" <?= $jogo['tipo'] === 'Oficial' ? 'selected' : '' ?>>Oficial</option>
+    </select>
 
     <button type="submit">Salvar Alterações</button>
   </form>

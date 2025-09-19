@@ -24,9 +24,9 @@
     <button class="popup-btn" onclick="location.href='gerenciar_alunos.php'">
       <i class="bi bi-person-arms-up"></i> Alunos
     </button>
-    <button class="popup-btn" onclick="location.href='index.php'">
-      <i class="bi bi-door-closed-fill"></i> Sair
-    </button>
+<button class="popup-btn" onclick="location.href='logout.php'">
+  <i class="bi bi-door-closed-fill"></i> Sair
+</button>
   </div>
 </div>
 

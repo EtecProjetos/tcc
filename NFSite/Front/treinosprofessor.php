@@ -215,7 +215,7 @@ a.btn-edit:hover {
     text-align: center;
     font-size: 1.3rem;
     padding: 40px 0;
-    color: #ffd700;
+    color: #000000ff;
 }
 
 /* Responsividade */

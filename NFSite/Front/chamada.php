@@ -133,7 +133,7 @@ tr:nth-child(even) { background: #f2f2f2; }
 </head>
 <body>
 <div class="container">
-    <a href="chamada_iniciar.php" class="btn-voltar">← Voltar</a>
+    <a href="#" onclick="window.history.back();" class="btn-voltar">← Voltar</a>
     <h2>Chamada - <?= date('d/m/Y', strtotime($data)) ?></h2>
 
     <form action="salvar_chamada.php" method="POST" id="formChamada">

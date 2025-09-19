@@ -100,7 +100,7 @@ if (!$aluno) {
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Perfil do Aluno</title>
+<title>Perfil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -108,10 +108,11 @@ if (!$aluno) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
   <!-- Fonte Fredoka -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles/styleBase.css">
+  <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+
 <style>
 body {
-    background-color: #520c6f;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -121,11 +122,15 @@ body {
 .container {
     max-width: 600px;
     margin: 30px auto 100px auto;
-    background-color: #7a0ea4;
+    background: rgba(138, 58, 185, 0.9);
     border-radius: 15px;
     padding: 20px 30px 40px 30px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     text-align: left;
+}
+.container:hover {
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7); /* sombra preta */
+    transition: box-shadow 0.5s ease; /* transição suave */
 }
 
 h1 {
@@ -194,8 +199,20 @@ input[type=submit]:hover, button:hover {
         padding: 15px 20px 30px 20px;
     }
 } 
+
+header.logo-header {
+    margin-bottom: 30px;
+}
+header.logo-header .logo {
+    width: 180px;
+    display: block;
+    margin: 0 auto;
+}
 </style>
 </head>
+<header class="logo-header">
+    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+</header>
 <body>
 
 <div class="container">
@@ -210,16 +227,16 @@ input[type=submit]:hover, button:hover {
     <form method="post" action="">
         <input type="hidden" name="acao" value="atualizar_perfil" />
 
-        <label for="nome">Nome *</label>
+        <label for="nome">Nome </label>
         <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($aluno['nome']) ?>" />
 
-        <label for="data_nascimento">Data de Nascimento *</label>
+        <label for="data_nascimento">Data de Nascimento </label>
         <input type="date" id="data_nascimento" name="data_nascimento" required value="<?= h($aluno['data_nascimento']) ?>" />
 
-        <label for="cpf">CPF *</label>
+        <label for="cpf">CPF </label>
         <input type="text" id="cpf" name="cpf" required maxlength="14" placeholder="000.000.000-00" value="<?= h($aluno['cpf']) ?>" />
 
-        <label for="email">E-mail *</label>
+        <label for="email">E-mail </label>
         <input type="email" id="email" name="email" required maxlength="100" value="<?= h($aluno['email']) ?>" />
 
         <label for="telefone">Telefone</label>

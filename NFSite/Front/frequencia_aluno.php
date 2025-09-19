@@ -66,43 +66,61 @@ $porcentagem = ($total > 0) ? round(($presentes / $total) * 100, 2) : 0;
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #520c6f;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%); /* Fundo degradê para toda a página */
     color: #fff;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Garante que o degradê preencha a tela toda */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
 .container {
     max-width: 480px;
-    margin: auto;
+    width: 90%;
+    margin: 20px auto;
     background: #fff;
     color: #390062;
     border-radius: 20px;
     padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+
 h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #6a0dad; /* Título em roxo */
 }
+
 form {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     justify-content: space-between;
 }
+
 form select, form button {
     padding: 8px 12px;
     border-radius: 10px;
     border: 2px solid #6f2da8;
     font-weight: 600;
+    color: #390062;
+    background: #e9e5f5; /* Fundo do select levemente roxo */
 }
+
 form button {
     background: #6f2da8;
     color: #fff;
     border: none;
     cursor: pointer;
 }
+
 form button:hover {
     background: #551b9a;
 }
+
 .porcentagem {
     font-size: 48px;
     font-weight: bold;
@@ -110,10 +128,12 @@ form button:hover {
     margin-bottom: 20px;
     color: #6f2da8;
 }
+
 .info p {
     margin: 6px 0;
     font-weight: 600;
 }
+
 .frequencia-lista {
     background: #faf7ff;
     color: #390062;
@@ -122,21 +142,28 @@ form button:hover {
     max-height: 300px;
     overflow-y: auto;
 }
+
 .frequencia-item {
     display: flex;
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #d9c9f9;
     font-weight: 600;
+    align-items: center;
 }
+
 .frequencia-item i {
     font-size: 20px;
 }
+
 .presente i { color: #28a745; }
+
 .faltou i { color: #dc3545; }
+
 </style>
 </head>
 <body>
+
 <div class="container">
     <h2>Frequência de <?= str_pad($mes,2,'0',STR_PAD_LEFT) ?>/<?= $ano ?></h2>
 
@@ -184,5 +211,6 @@ form button:hover {
 
 <div id="nav-placeholder"></div>
 <script src="js/nav.js"></script>
+
 </body>
 </html>

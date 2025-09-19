@@ -1,72 +1,17 @@
-/* --- Estilos Rodapé Navbar e Popup (seu código exato) --- */
-
-.icon-navbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #390062;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.nav-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff900;
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
-    line-height: 1;
-    vertical-align: middle;
-    margin: 0;
-    transition: transform 0.2s;
-    text-decoration: none;
-}
-
-.nav-icon i {
-    display: inline-block;
-    line-height: 1;
-    vertical-align: middle;
-}
-
-.nav-icon.active {
-    transform: translateY(-10px);
-}
-
-.nav-icon:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-}
-
-@media (max-width: 480px) {
-    .nav-icon {
-        font-size: 1.5rem;
-        width: 40px;
-        height: 40px;
-    }
-
-    .nav-icon.active {
-        transform: translateY(-8px);
-    }
-}
-
-/* Estilo geral do corpo */
+/* ===========================
+   Estilo geral
+=========================== */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Fredoka', sans-serif;
-    background-color: #520c6f; /* Roxo mais claro */
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 20px 100px; /* deixa espaço para o rodapé */
+    padding: 30px 20px 30px;
 }
 
 /* Header com logo */
@@ -75,25 +20,33 @@ body {
     justify-content: center;
     align-items: center;
     padding: 30px 0;
-    
+
+     background: transparent; /* remove o gradiente ou cor anterior */
 }
 
 .logo {
-    width: 130px;
+    width: 160px;
     height: auto;
 }
 
-/* Texto principal */
-.content {
-    padding: 0 20px;
+/* Título da página */
+.title {
     text-align: center;
-    width: 100%;
-    max-width: 720px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-/* --- Treinos container e boxes --- */
+.title h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 4px rgba(255,255,255,0.4);
+    margin: 0;
+}
+
+/* Treinos container e boxes */
 #treinos-container {
-    max-width: 720px;
+    max-width: 900px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -102,22 +55,24 @@ body {
 }
 
 .treino-box {
-    background: rgba(138, 58, 185, 0.9);
-    border-radius: 12px;
+    background: linear-gradient(to right, #5a189a, #7a0ea4);
+    border-radius: 15px;
     padding: 20px 25px;
     display: flex;
     align-items: center;
     gap: 25px;
     font-size: 1.2rem;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: background-color 0.3s ease;
-    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    justify-content: space-between; /* distribui melhor no desktop */
     text-align: left;
+    transition: transform 0.2s ease, background-color 0.3s;
+    flex-wrap: wrap; /* permite quebrar linhas se necessário */
 }
 
 .treino-box:hover {
-    background-color: #b265d1;
+    transform: translateY(-5px);
+    background: linear-gradient(to right, #6a2fa5, #8b1ed6);
     cursor: pointer;
 }
 
@@ -138,8 +93,9 @@ body {
     flex-shrink: 0;
 }
 
-.data, .dia {
-    min-width: 70px;
+.data, .dia, .horario {
+    min-width: 80px;
+    text-align: center;
 }
 
 .dia {
@@ -147,7 +103,6 @@ body {
     text-transform: uppercase;
 }
 
-/* Label Próximos treinos */
 .proximos-label {
     font-size: 1.3rem;
     font-weight: 800;
@@ -159,7 +114,6 @@ body {
     text-shadow: 0 0 4px rgba(255,255,255,0.7);
 }
 
-/* Mensagem quando não há treino */
 .sem-treino {
     max-width: 720px;
     background: rgba(255,255,255,0.15);
@@ -172,75 +126,10 @@ body {
     box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-/* --- Modelo pop up --- */
-.popup-menu {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 250px;
-    height: 100vh;
-    background: linear-gradient(180deg, #5e2ca5, #7e57c2);
-    border-radius: 16px 0 0 16px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    transition: right 0.4s ease;
-    z-index: 1000;
-    overflow: hidden;
-    box-shadow: -5px 0 12px rgba(0, 0, 0, 0.3);
-}
-
-.popup-menu.open {
-    right: 0;
-}
-
-.popup-close-btn {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    align-self: flex-end;
-    margin-bottom: 25px;
-}
-
-.popup-close-btn:hover {
-    color: #ffd700;
-}
-
-.popup-btn-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-}
-
-.popup-btn {
-    background: #FFD700;
-    border: none;
-    border-radius: 20px;
-    padding: 16px;
-    color: #4b0082;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 10px 0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, background-color 0.3s;
-}
-
-.popup-btn:hover {
-    background-color: #ffe34d;
-    transform: translateY(-3px);
-}
-
-/* Responsividade */
+/* ===========================
+   Responsividade
+=========================== */
 @media (max-width: 720px) {
-    body {
-        padding-bottom: 120px; /* espaço maior para o rodapé */
-    }
-
     #treinos-container {
         max-width: 480px;
         gap: 12px;
@@ -259,21 +148,9 @@ body {
         font-size: 2rem;
     }
 
-    .data, .dia {
+    .data, .dia, .horario {
         min-width: unset;
         width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .nav-icon {
-        font-size: 1.5rem;
-        width: 40px;
-        height: 40px;
-    }
-
-    .nav-icon.active {
-        transform: translateY(-8px);
     }
 }
 
@@ -282,29 +159,14 @@ body {
         width: 160px;
     }
 
-    .intro-text h1 {
-        font-size: 1.8rem;
+    /* Distribuição em colunas para desktop */
+    .treino-box {
+        flex-direction: row;
     }
 
-    .intro-text h2 {
-        font-size: 2rem;
+    .treino-box.destaque {
+        flex-direction: row;
+        justify-content: space-around;
+        text-align: center;
     }
 }
-
-a {
-    text-decoration: none;
-}
-.title {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
-.title h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 0 4px rgba(255,255,255,0.4);
-    margin: 0;
-}
-

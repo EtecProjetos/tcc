@@ -122,7 +122,8 @@ button:hover {
 </head>
 <body>
 <div class="container">
-    <a href="home_professor.php" class="btn-voltar">← Voltar</a>
+<a href="#" onclick="window.history.back();" class="btn-voltar">← Voltar</a>
+
     <h2>Iniciar Chamada</h2>
     <form action="chamada.php" method="GET" autocomplete="off">
         <label for="turma_id">Turma:</label>

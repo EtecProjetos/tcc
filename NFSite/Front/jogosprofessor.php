@@ -14,7 +14,7 @@ $professor_id = $_SESSION['professor_id'];
 $conn->query("DELETE FROM jogos WHERE data < CURDATE()");
 
 // Inserir novo jogo
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['data'], $_POST['horario'], $_POST['categoria'], $_POST['local'], $_POST['adversario'], $_POST['logo_url'], $_POST['turma_id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['data'], $_POST['horario'], $_POST['categoria'], $_POST['local'], $_POST['adversario'], $_POST['logo_url'], $_POST['turma_id'], $_POST['tipo'])) {
     $data = $_POST['data'];
     $horario = $_POST['horario'];
     $categoria = strtoupper($_POST['categoria']);
@@ -22,9 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['data'], $_POST['horar
     $adversario = strtoupper($_POST['adversario']);
     $logo_url = $_POST['logo_url'];
     $turma_id = $_POST['turma_id'];
+    $tipo = $_POST['tipo'];
 
-    $stmt = $conn->prepare("INSERT INTO jogos (data, horario, categoria, local, adversario, logo_url, professor_id, turma_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssii", $data, $horario, $categoria, $local, $adversario, $logo_url, $professor_id, $turma_id);
+    $stmt = $conn->prepare("INSERT INTO jogos (data, horario, categoria, local, adversario, logo_url, professor_id, turma_id, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssiss", $data, $horario, $categoria, $local, $adversario, $logo_url, $professor_id, $turma_id, $tipo);
     $stmt->execute();
     $stmt->close();
 
@@ -45,7 +46,7 @@ $turmas_result = $conn->query("SELECT id, nome FROM turmas WHERE professor_id = 
 
 // Buscar jogos do professor
 $sql = "
-SELECT j.id, j.data, j.horario, j.categoria, j.local, j.adversario, j.logo_url, t.nome AS turma_nome
+SELECT j.id, j.data, j.horario, j.categoria, j.local, j.adversario, j.logo_url, j.tipo, t.nome AS turma_nome
 FROM jogos j
 JOIN turmas t ON j.turma_id = t.id
 WHERE j.professor_id = $professor_id
@@ -57,11 +58,11 @@ $jogos = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Gerenciar Jogos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<title>Gerenciar Jogos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <style>
         /* ================= Geral ================= */
@@ -281,6 +282,13 @@ $jogos = $conn->query($sql);
         <label for="categoria">Categoria:</label>
         <input type="text" id="categoria" name="categoria" required>
 
+        <label for="tipo">Tipo de Campeonato:</label>
+        <select id="tipo" name="tipo" required>
+            <option value="">Selecione o tipo</option>
+            <option value="Amistoso">Amistoso</option>
+            <option value="Oficial">Oficial</option>
+        </select>
+
         <label for="local">Local:</label>
         <input type="text" id="local" name="local" required>
 
@@ -311,6 +319,7 @@ $jogos = $conn->query($sql);
                         <th>Data</th>
                         <th>Horário</th>
                         <th>Categoria</th>
+                        <th>Tipo</th>
                         <th>Local</th>
                         <th>Adversário</th>
                         <th>Logo</th>
@@ -324,6 +333,7 @@ $jogos = $conn->query($sql);
                             <td data-label="Data"><?= date('d/m/Y', strtotime($j['data'])) ?></td>
                             <td data-label="Horário"><?= date('H:i', strtotime($j['horario'])) ?></td>
                             <td data-label="Categoria"><?= strtoupper($j['categoria']) ?></td>
+                            <td data-label="Tipo"><?= htmlspecialchars($j['tipo'] ?? '') ?></td>
                             <td data-label="Local"><?= strtoupper($j['local']) ?></td>
                             <td data-label="Adversário"><?= strtoupper($j['adversario']) ?></td>
                             <td data-label="Logo"><img src="<?= htmlspecialchars($j['logo_url']) ?>" class="logo" alt="Logo do adversário"></td>
@@ -343,7 +353,6 @@ $jogos = $conn->query($sql);
 </div>
 
 <div id="nav-placeholder"></div>
-
 <script src="js/nav_professor.js"></script>
 </body>
 </html>

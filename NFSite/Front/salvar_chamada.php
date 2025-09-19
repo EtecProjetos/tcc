@@ -41,6 +41,7 @@ while($aluno = $result->fetch_assoc()) {
 <title>Chamada Salva</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 <style>
 body {
     margin: 0;
@@ -105,7 +106,7 @@ p {
 }
 </style>
 <script>
-setTimeout(()=>{ window.location.href='chamada_iniciar.php'; },3000);
+setTimeout(()=>{ window.location.href='home_Professor.php'; },3000);
 </script>
 </head>
 <body>

@@ -35,70 +35,90 @@ if ($turma_id) {
     }
     $stmt->close();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Jogos do Aluno</title>
+<title>Jogos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style_jogos.css" />
 <link rel="stylesheet" href="styleBase.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+<link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #520c6f;
-    color: white;
-    padding-bottom: 80px;
-}
-
-.card-jogo {
-    background-color: #7a0ea4;
-    margin: 20px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    text-align: center;
-}
-
-.topo {
-    background: linear-gradient(to right, #2b003c, #3f0058);
-    padding: 10px;
-}
-
-.logo {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    border-radius: 50%;
-    margin-top: 5px;
-}
-
-.time-nome {
-    margin-top: 5px;
-    font-weight: bold;
-    font-size: 1rem;
-    display: block;
+    padding: 20px 20px 100px; /* Espaço para navbar */
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* Header principal com logo */
+.logo-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    background: transparent;
+    width: 100%;
+}
+
+.logo-header .logo {
+    width: 140px;
+    height: auto;
+}
+
+/* Container dos jogos */
+#jogos-container {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card de cada jogo */
+.card-jogo {
+    background: rgba(138, 58, 185, 0.9);
+    border-radius: 12px;
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+}
+
+.card-jogo:hover {
+    background-color: #b265d1;
+        box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7); /* sombra preta */
+    transition: box-shadow 0.5s ease; /* transição suave */
+}
+
+/* Versus: logos lado a lado */
 .versus {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 15px;
-    font-weight: bold;
-    font-size: 1.2em;
     gap: 20px;
+    font-weight: bold;
+    flex-wrap: nowrap;
 }
 
-.logo-time,
-.logo {
+.time-bloco {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-time, .logo {
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -111,42 +131,57 @@ body {
     color: white;
 }
 
+/* Container para infos em desktop (2 colunas) */
+.infos-jogo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.info {
+    background-color: rgba(48,0,67,0.8);
+    padding: 12px 15px;
+    font-weight: bold;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    justify-content: flex-start;
+}
+
+/* Responsividade para celular */
 @media (max-width: 600px) {
     .versus {
-        font-size: 1em;
         gap: 12px;
+        font-size: 0.9rem;
     }
-    .logo-time,
-    .logo {
+    .logo-time, .logo {
         width: 60px;
         height: 60px;
     }
     .bi-x-lg {
         font-size: 28px;
     }
-}
 
-.info {
-    background-color: #300043;
-    padding: 12px 15px;
-    font-weight: bold;
-    font-size: 1em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
+    /* Infos empilhadas em celular */
+    .infos-jogo {
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>
 </head>
 <body>
 
+<header class="logo-header">
+    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+</header>
+
+<div id="jogos-container">
 <?php if (count($jogos) > 0): ?>
     <?php foreach ($jogos as $jogo): ?>
         <div class="card-jogo">
-            <div class="topo">
-                <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
-                <span class="time-nome">NEW FOOTBALL</span>
-            </div>
 
             <div class="versus">
                 <div class="time-bloco">
@@ -160,19 +195,25 @@ body {
                 </div>
             </div>
 
-            <div class="info"><i class="bi bi-house"></i> LOCAL: <?= mb_strtoupper(htmlspecialchars($jogo['local']), 'UTF-8') ?></div>
-            <div class="info"><i class="bi bi-clock"></i> HORÁRIO: <?= date("H:i", strtotime($jogo['horario'])) ?></div>
-            <div class="info"><i class="bi bi-calendar-event"></i> DATA: <?= date('d/m/Y', strtotime($jogo['data'])) ?></div>
-            <div class="info"><i class="bi bi-list"></i> CATEGORIA: <?= mb_strtoupper(htmlspecialchars($jogo['categoria']), 'UTF-8') ?></div>
-            <div class="info"><i class="bi bi-person-lines-fill"></i> ADVERSÁRIO: <?= mb_strtoupper(htmlspecialchars($jogo['adversario']), 'UTF-8') ?></div>
+            <div class="infos-jogo">
+
+                <div class="info"><i class="bi bi-house"></i> LOCAL: <?= mb_strtoupper(htmlspecialchars($jogo['local']), 'UTF-8') ?></div>
+                <div class="info"><i class="bi bi-clock"></i> HORÁRIO: <?= date("H:i", strtotime($jogo['horario'])) ?></div>
+                <div class="info"><i class="bi bi-calendar-event"></i> DATA: <?= date('d/m/Y', strtotime($jogo['data'])) ?></div>
+                <div class="info"><i class="bi bi-list"></i> CATEGORIA: <?= mb_strtoupper(htmlspecialchars($jogo['categoria']), 'UTF-8') ?></div>
+                <div class="info"><i class="bi bi-person-lines-fill"></i> ADVERSÁRIO: <?= mb_strtoupper(htmlspecialchars($jogo['adversario']), 'UTF-8') ?></div>
+                <div class="info"><i class="bi bi-tag"></i> TIPO: <?= mb_strtoupper(htmlspecialchars($jogo['tipo']), 'UTF-8') ?></div>
+
+            </div>
+
         </div>
     <?php endforeach; ?>
 <?php else: ?>
     <p style="text-align:center; color:white;">NENHUM JOGO DISPONÍVEL PARA SUA TURMA.</p>
 <?php endif; ?>
-  <div id="nav-placeholder"></div>
+</div>
 
-  <!-- Script externo para controle da navbar -->
-  <script src="js/nav.js"></script>
+<div id="nav-placeholder"></div>
+<script src="js/nav.js"></script>
 </body>
 </html>
