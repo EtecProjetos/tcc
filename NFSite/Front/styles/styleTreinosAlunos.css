@@ -11,7 +11,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 20px 30px;
+       padding: 50px 20px 30px;
+           overflow-x: hidden;       /* evita scroll horizontal */
+    overflow-y: auto;        
+  
 }
 
 /* Header com logo */
@@ -20,8 +23,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 30px 0;
-
-     background: transparent; /* remove o gradiente ou cor anterior */
+    background: transparent;
 }
 
 .logo {
@@ -52,6 +54,8 @@ body {
     flex-direction: column;
     gap: 18px;
     margin-top: 15px;
+    overflow-y: auto; /* Permitindo o scroll vertical */
+    max-height: 80vh; /* Limita a altura para melhorar o scroll */
 }
 
 .treino-box {
@@ -64,10 +68,10 @@ body {
     font-size: 1.2rem;
     font-weight: 700;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    justify-content: space-between; /* distribui melhor no desktop */
+    justify-content: space-between;
     text-align: left;
     transition: transform 0.2s ease, background-color 0.3s;
-    flex-wrap: wrap; /* permite quebrar linhas se necessário */
+    flex-wrap: wrap;
 }
 
 .treino-box:hover {
@@ -79,8 +83,7 @@ body {
 .treino-box.destaque {
     background: #ffdd57;
     color: #1d002c;
-    font-weight: 900;
-    box-shadow: 0 6px 20px #ffdd57;
+    font-weight: 900;   
 }
 
 .treino-box.destaque:hover {
@@ -162,11 +165,27 @@ body {
     /* Distribuição em colunas para desktop */
     .treino-box {
         flex-direction: row;
+        justify-content: space-between;
+        text-align: center;
     }
 
     .treino-box.destaque {
         flex-direction: row;
-        justify-content: space-around;
-        text-align: center;
+        justify-content: space-between;
+    }
+}
+
+/* ===========================
+   Alinhamento responsivo para os dias e horários
+=========================== */
+.treino-box .data, .treino-box .dia, .treino-box .horario {
+    flex: 1 1 30%;
+    text-align: center;
+    min-width: 80px;
+}
+
+@media (max-width: 480px) {
+    .treino-box .data, .treino-box .dia, .treino-box .horario {
+        min-width: 120px;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../back/conexao.php';
+include '../../../Back/conexao.php';
 
 // Verifica se aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
@@ -42,10 +42,10 @@ if ($turma_id) {
 <meta charset="UTF-8">
 <title>Jogos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="styleBase.css" />
+<link rel="stylesheet" href="../../styles/styleBase.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-<link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+<link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 
 <style>
 body {
@@ -98,18 +98,18 @@ body {
 
 .card-jogo:hover {
     background-color: #b265d1;
-        box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7); /* sombra preta */
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7); /* sombra preta */
     transition: box-shadow 0.5s ease; /* transição suave */
 }
 
 /* Versus: logos lado a lado */
 .versus {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 20px;
+    justify-content: space-between; /* Deixe a distribuição equilibrada */
+    align-items: center; /* Centraliza verticalmente o conteúdo, incluindo o ícone */
+    gap: 20px; /* Espaço entre os times */
     font-weight: bold;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap; /* Evita quebra de linha no espaço entre os times */
 }
 
 .time-bloco {
@@ -123,12 +123,15 @@ body {
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #fff;
 }
 
 .bi-x-lg {
     font-size: 36px;
     color: white;
+    display: flex; /* Faz o ícone se comportar como um bloco flexível */
+    justify-content: center; /* Centraliza o conteúdo dentro do ícone */
+    align-items: center; /* Centraliza verticalmente o ícone */
+    flex-shrink: 0; /* Impede o ícone de diminuir de tamanho */
 }
 
 /* Container para infos em desktop (2 colunas) */
@@ -175,7 +178,7 @@ body {
 <body>
 
 <header class="logo-header">
-    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+    <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
 </header>
 
 <div id="jogos-container">
@@ -184,15 +187,16 @@ body {
         <div class="card-jogo">
 
             <div class="versus">
+                                <div class="time-bloco">
+                    <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
+                    <span class="time-nome">NEW FOOTBALL</span>
+                </div>
                 <div class="time-bloco">
                     <img src="<?= htmlspecialchars($jogo['logo_url']) ?>" alt="Logo Adversário" class="logo-time" />
                     <span class="time-nome"><?= mb_strtoupper(htmlspecialchars($jogo['adversario']), 'UTF-8') ?></span>
                 </div>
-                <i class="bi bi-x-lg"></i>
-                <div class="time-bloco">
-                    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
-                    <span class="time-nome">NEW FOOTBALL</span>
-                </div>
+
+        
             </div>
 
             <div class="infos-jogo">
@@ -214,6 +218,6 @@ body {
 </div>
 
 <div id="nav-placeholder"></div>
-<script src="js/nav.js"></script>
+<script src="../../js/nav.js"></script>
 </body>
 </html>

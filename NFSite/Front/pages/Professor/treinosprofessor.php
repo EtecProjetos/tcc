@@ -70,6 +70,8 @@ body {
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: #ffffff;
     min-height: 100vh;
+        overflow-x: hidden;       /* evita scroll horizontal */
+    overflow-y: auto;   
 }
 
 .logo-header {
@@ -184,28 +186,32 @@ a.btn {
     transition: transform 0.2s, background-color 0.3s;
 }
 a.btn-edit {
-    background-color: #ffd700;
-    color: #4b0082;
+    background-color: #2980b9;
+    color: #ffffffff;
 }
 a.btn-edit:hover {
-    background-color: #ffe345;
+    background-color: #1c5980;
     transform: translateY(-2px);
 }
 .btn-delete {
-  background-color: #ff0000ff; /* Roxo */
+  background-color: #e74c3c; 
   border: none;
   color: white;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-delete:hover {
-  background-color: #ff0000ff; /* Roxo mais escuro */
+  background-color: #b8362a; 
   color: white;
   transform: scale(1.1);
 }
 
+
 /* Garante que o ícone dentro do botão fique sempre branco */
 .btn-delete i {
+  color: white !important;
+}
+.btn-edit i {
   color: white !important;
 }
 

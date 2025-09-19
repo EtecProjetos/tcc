@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../back/conexao.php';
+include '../../../Back/conexao.php';  // Corrigido para 3 níveis acima
 
 // Verifica se o aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
@@ -72,14 +72,15 @@ $conn->close();
     <meta charset="UTF-8" />
     <title>Treinos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <link rel="stylesheet" href="styles/styleTreinosAlunos.css" />
+    <!-- Caminho do CSS corrigido -->
+    <link rel="stylesheet" href="../../styles/styleTreinosAlunos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 </head>
 <body>
 
 <header class="logo-header">
-    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+    <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
 </header>
 
 <div class="title">
@@ -108,6 +109,7 @@ $conn->close();
                     </div>
                     <div class="data"><?= htmlspecialchars($treinos[$i]['data_formatada']) ?></div>
                     <div class="dia"><?= htmlspecialchars($treinos[$i]['dia_semana']) ?></div>
+                    <p><span id="horario-destaque"><?= htmlspecialchars($treinos[$i]['horario']) ?></span></p>
                 </div>
             <?php endfor; ?>
         <?php endif; ?>
@@ -117,9 +119,13 @@ $conn->close();
     <?php endif; ?>
 </div>
 
+<!-- Caminho para a navbar corrigido -->
 <div id="nav-placeholder"></div>
 
-<script src="js/nav.js"></script>
+<br><br><br>
+
+<!-- Caminho do JavaScript corrigido -->
+<script src="../../js/nav.js"></script>
 
 </body>
 </html>

@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $local = $_POST['local'] ?? '';
     $categoria = $_POST['categoria'] ?? '';
     $adversario = $_POST['adversario'] ?? '';
-    $tipo = $_POST['tipo'] ?? '';  // Campo tipo
+    $tipo = $_POST['tipo'] ?? '';  
+    $logo_url = $_POST['logo_url'] ?? '';
 
     if (
         $data === $jogo['data'] &&
@@ -56,21 +57,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $local === $jogo['local'] &&
         $categoria === $jogo['categoria'] &&
         $adversario === $jogo['adversario'] &&
-        $tipo === $jogo['tipo']  // Verifica se o tipo foi alterado
+        $tipo === $jogo['tipo'] &&
+        $logo_url === $jogo['logo_url']
     ) {
         $alert = 'nochange';
         $message = 'Nenhuma alteração detectada.';
     } else {
-        $update = $conn->prepare("UPDATE jogos SET data=?, horario=?, turma_id=?, local=?, categoria=?, adversario=?, tipo=? WHERE id=? AND professor_id=?");
-$update->bind_param("ssissssii", $data, $horario, $turma_id, $local, $categoria, $adversario, $tipo, $jogo_id, $professor_id);
-
+        $update = $conn->prepare("UPDATE jogos SET data=?, horario=?, turma_id=?, local=?, categoria=?, adversario=?, tipo=?, logo_url=? WHERE id=? AND professor_id=?");
+        $update->bind_param("ssisssssii", $data, $horario, $turma_id, $local, $categoria, $adversario, $tipo, $logo_url, $jogo_id, $professor_id);
         $update->execute();
         $update->close();
 
         $alert = 'success';
         $message = 'Jogo atualizado com sucesso!';
 
-        // Atualiza os dados do jogo após a alteração
         $jogo['data'] = $data;
         $jogo['horario'] = $horario;
         $jogo['turma_id'] = $turma_id;
@@ -78,6 +78,7 @@ $update->bind_param("ssissssii", $data, $horario, $turma_id, $local, $categoria,
         $jogo['categoria'] = $categoria;
         $jogo['adversario'] = $adversario;
         $jogo['tipo'] = $tipo;
+        $jogo['logo_url'] = $logo_url;
     }
 }
 ?>
@@ -93,7 +94,6 @@ $update->bind_param("ssissssii", $data, $horario, $turma_id, $local, $categoria,
 <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 
 <style>
-/* ================= Geral ================= */
 body {
     margin:0;
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
@@ -106,7 +106,6 @@ body {
     padding:20px 10px;
 }
 
-/* Títulos */
 h2{
     text-align:center;
     font-weight:700;
@@ -115,7 +114,6 @@ h2{
     color:#6f2da8;
 }
 
-/* Container principal */
 .container{
     background:#fff;
     border-radius:16px;
@@ -126,7 +124,6 @@ h2{
     color:#4b0082;
 }
 
-/* ================= Formulário ================= */
 form{
     display:flex;
     flex-direction:column;
@@ -185,7 +182,6 @@ button:hover{
 
 .back-link:hover{color:#390062;}
 
-/* Alerta */
 #alert-box{
     position:fixed;
     top:20px;
@@ -210,7 +206,6 @@ button:hover{
 #alert-box.success{background-color:#28a745;}
 #alert-box.nochange{background-color:#ffc107; color:#333;}
 
-/* ================= Responsividade ================= */
 @media(max-width:480px){
     .container{padding:20px;}
     h2{font-size:1.6rem;}
@@ -221,7 +216,6 @@ button:hover{
     justify-content: center;
     align-items: center;
     padding: 30px 0;
-
 }
 
 .logo {
@@ -270,6 +264,9 @@ button:hover{
       <option value="Amistoso" <?= $jogo['tipo'] === 'Amistoso' ? 'selected' : '' ?>>Amistoso</option>
       <option value="Oficial" <?= $jogo['tipo'] === 'Oficial' ? 'selected' : '' ?>>Oficial</option>
     </select>
+
+    <label for="logo_url">URL da Logo do Adversário:</label>
+    <input id="logo_url" type="text" name="logo_url" required value="<?= htmlspecialchars($jogo['logo_url']) ?>">
 
     <button type="submit">Salvar Alterações</button>
   </form>

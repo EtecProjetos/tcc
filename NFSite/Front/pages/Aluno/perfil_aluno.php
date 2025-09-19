@@ -11,7 +11,7 @@ if (!isset($_SESSION['aluno_id'])) {
     exit();
 }
 
-include '../back/conexao.php';
+include '../../../Back/conexao.php';
 
 $erro = '';
 $sucesso = '';
@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         exit;
     }
 
+    // Busca dados atuais do aluno
     $stmt = $conn->prepare("SELECT nome, data_nascimento, cpf, email, telefone, nome_responsavel, cpf_responsavel FROM alunos WHERE id = ?");
     $stmt->bind_param("i", $aluno_id);
     $stmt->execute();
@@ -55,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     $dados_atuais = $result->fetch_assoc();
     $stmt->close();
 
+    // Verifica se houve alterações
     $alterou = (
         $nome !== $dados_atuais['nome'] ||
         $data_nascimento !== $dados_atuais['data_nascimento'] ||
@@ -66,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     );
 
     if ($alterou) {
+        // Atualiza perfil no banco
         $stmt = $conn->prepare("UPDATE alunos SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=?, nome_responsavel=?, cpf_responsavel=? WHERE id=?");
         $stmt->bind_param("sssssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $nome_responsavel, $cpf_responsavel, $aluno_id);
         if ($stmt->execute()) {
@@ -103,12 +106,13 @@ if (!$aluno) {
 <title>Perfil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Ícones Bootstrap -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <!-- Fonte Fredoka -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- Ícones Bootstrap -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+<!-- Fonte Fredoka -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 
 <style>
 body {
@@ -211,7 +215,7 @@ header.logo-header .logo {
 </style>
 </head>
 <header class="logo-header">
-    <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+    <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
 </header>
 <body>
 
@@ -225,6 +229,7 @@ header.logo-header .logo {
     <?php endif; ?>
 
     <form method="post" action="">
+
         <input type="hidden" name="acao" value="atualizar_perfil" />
 
         <label for="nome">Nome </label>
@@ -251,10 +256,11 @@ header.logo-header .logo {
         <input type="submit" class="btn_salvar" value="Salvar Alterações" />
     </form>
 </div>
-  <div id="nav-placeholder"></div>
 
-  <!-- Script externo para controle da navbar -->
-  <script src="js/nav.js"></script>
+<div id="nav-placeholder"></div>
+
+<!-- Script externo para controle da navbar -->
+<script src="../../js/nav.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const msg = document.querySelector('.msg-error') || document.querySelector('.msg-success');

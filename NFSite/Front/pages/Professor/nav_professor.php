@@ -1,9 +1,10 @@
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
 <div class="icon-navbar">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <a href="home_aluno.php"><div class="nav-icon"><i class="fas fa-home"></i></div></a>
-  <a href="TreinosAlunos.php"><div class="nav-icon"><i class="bi bi-cone-striped"></i></div></a>
-  <a href="JogosAlunos.php"><div class="nav-icon"><i class="bi bi-dribbble"></i></div></a>
+  <a href="home_professor.php"><div class="nav-icon"><i class="fas fa-home"></i></div></a>
+  <a href="Treinosprofessor.php"><div class="nav-icon"><i class="bi bi-cone-striped"></i></div></a>
+  <a href="Jogosprofessor.php"><div class="nav-icon"><i class="bi bi-dribbble"></i></div></a>
   <a href="javascript:void(0)" id="btn-toggle-popup"><div class="nav-icon"><i class="fas fa-bars"></i></div></a>
 </div>
 
@@ -11,19 +12,21 @@
 <div id="popup-menu" class="popup-menu" aria-hidden="true">
   <button class="popup-close-btn" id="btn-close-popup" aria-label="Fechar menu">×</button>
   <div class="popup-btn-container">
-    <button class="popup-btn" onclick="location.href='perfil_aluno.php'">
+    <button class="popup-btn" onclick="location.href='perfil_professor.php'">
       <i class="bi bi-person-fill"></i> Perfil
     </button>
     <button class="popup-btn" onclick="location.href='campeonatos.php'">
       <i class="bi bi-trophy-fill"></i> Campeonatos
     </button>
-    <button class="popup-btn" onclick="location.href='frequencia_aluno.php'">
-      <i class="bi bi-card-checklist"></i> Frequência
+    <button class="popup-btn" onclick="location.href='chamada_iniciar.php'">
+      <i class="bi bi-card-checklist"></i> Chamada
+    </button>
+    <button class="popup-btn" onclick="location.href='gerenciar_alunos.php'">
+      <i class="bi bi-person-arms-up"></i> Alunos
+    </button>
 <button class="popup-btn" onclick="location.href='logout.php'">
   <i class="bi bi-door-closed-fill"></i> Sair
 </button>
-
-
   </div>
 </div>
 
@@ -69,6 +72,18 @@
     transform: translateY(-5px);
 }
 
+.icon-navbar a,
+.icon-navbar a:focus,
+.icon-navbar a:active,
+.icon-navbar a:visited {
+    text-decoration: none; /* remove underline */
+    outline: none;          /* remove contorno azul ao clicar */
+    box-shadow: none;       /* remove sombras de foco */
+}
+.icon-navbar i {
+    display: block; /* remove espaço extra */
+
+}
 
 /* ================= Popup Lateral ================= */
 .popup-menu {
@@ -279,4 +294,20 @@
 }
 </style>
 
+<script>
+// Abre e fecha popup
+const popupMenu = document.getElementById('popup-menu');
+const btnToggle = document.getElementById('btn-toggle-popup');
+const btnClose = document.getElementById('btn-close-popup');
 
+btnToggle.addEventListener('click', () => popupMenu.classList.toggle('open'));
+btnClose.addEventListener('click', () => popupMenu.classList.remove('open'));
+
+// Fecha popup se clicar fora dele
+document.addEventListener('click', function(event) {
+    const isClickInside = popupMenu.contains(event.target) || btnToggle.contains(event.target);
+    if (!isClickInside) {
+        popupMenu.classList.remove('open');
+    }
+});
+</script>

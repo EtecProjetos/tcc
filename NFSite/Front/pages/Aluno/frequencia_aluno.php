@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../back/conexao.php';
+include '../../../Back/conexao.php';
 
 // Verifica se o aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
@@ -63,6 +63,7 @@ $porcentagem = ($total > 0) ? round(($presentes / $total) * 100, 2) : 0;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Frequência do Aluno</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -210,7 +211,8 @@ form button:hover {
 </div>
 
 <div id="nav-placeholder"></div>
-<script src="js/nav.js"></script>
+<script src="../../js/nav.js"></script>
+
 
 </body>
 </html>
