@@ -1,129 +1,132 @@
 <?php
 session_start();
-include '../back/conexao.php';
 
-// ID do aluno logado
-$aluno_id = $_SESSION['aluno_id'] ?? 0;
-if (!$aluno_id) {
-    echo "Aluno não logado.";
-    exit;
+// Verifica se o aluno está logado
+if (!isset($_SESSION['aluno_id'])) {
+    header("Location: loginAluno.php");
+    exit();
 }
 
-// Busca a turma do aluno
-$sql_turma = "SELECT turma_id FROM alunos WHERE id = ?";
-$stmt = $conn->prepare($sql_turma);
+// Inclui a conexão com o banco
+include '../../../Back/conexao.php';
+
+$aluno_nome = '';
+
+// Busca o nome do aluno usando a tabela pessoa
+$aluno_id = $_SESSION['aluno_id'];
+$stmt = $conn->prepare("
+    SELECT p.nome
+    FROM alunos a
+    JOIN pessoa p ON a.pessoa = p.id
+    WHERE a.pessoa = ?
+");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
-$result = $stmt->get_result();
-$turma = $result->fetch_assoc();
-$turma_id = $turma['turma_id'] ?? 0;
+$stmt->bind_result($nome);
+if ($stmt->fetch()) {
+    $aluno_nome = $nome;
+}
+$stmt->close();
 
-// Busca os campeonatos da turma
-$sql = "SELECT c.*, p.nome AS tecnico_nome 
-        FROM campeonatos c
-        JOIN professores p ON c.professor_id = p.id
-        WHERE c.turma_id = ?
-        ORDER BY c.data DESC";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $turma_id);
-$stmt->execute();
-$campeonatos = $stmt->get_result();
-
-
+// Busca os campeonatos
+$sql = "SELECT * FROM campeonatos ORDER BY data ASC";
+$result = $conn->query($sql);
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Campeonatos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f9f9f9;
-            padding-bottom: 80px;
-        }
-        .card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-        .info {
-            font-size: 0.95rem;
-            color: #555;
-        }
-        .convocado {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #198754;
-        }
-        .nao-convocado {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #dc3545;
-        }
-        .footer-icons {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            border-top: 1px solid #ccc;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 10;
-        }
-        .footer-icons a {
-            color: #555;
-            text-decoration: none;
-            font-size: 1.4rem;
-        }
-        .footer-icons a:hover {
-            color: #6f42c1;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campeonatos</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
+<style>
+body {
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+header.logo-header { margin-bottom: 30px; text-align: center; }
+header.logo-header .logo { width: 180px; }
+.campeonatos-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+}
+h1.campeonatos-title {
+    color: #FFD700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.btn-voltar {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #6a0dad;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+.campeonato-card {
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+    color: #fff;
+}
+.campeonato-card:hover { transform: scale(1.02); }
+.campeonato-card h2 { margin: 0 0 5px 0; color: #FFD700; }
+.campeonato-card p { margin: 3px 0; color: #ddd; }
+.futuro { border-left: 5px solid #00ff99; }
+.passado { border-left: 5px solid #ff6666; color: #bbb; }
+</style>
 </head>
 <body>
 
-<div class="container mt-4">
-    <h3 class="mb-4">Campeonatos</h3>
+<header class="logo-header">
+    <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
+</header>
 
-    <?php while ($camp = $campeonatos->fetch_assoc()): ?>
+<main class="content">
+    <section class="intro-text">
+        <h2 style="color: #FFD700; font-weight: 700;">
+            Bem-vindo, <?= htmlspecialchars($aluno_nome) ?>!
+        </h2>
+        <h1 class="campeonatos-title">Campeonatos</h1>
+        <a href="home_aluno.php" class="btn-voltar">← Voltar</a>
 
-        <?php
-        // Verifica se o aluno foi convocado
-        $sql_conv = "SELECT 1 FROM convocados_campeonato WHERE campeonato_id = ? AND aluno_id = ?";
-        $stmt_conv = $conn->prepare($sql_conv);
-        $stmt_conv->bind_param("ii", $camp['id'], $aluno_id);
-        $stmt_conv->execute();
-        $convocado = $stmt_conv->get_result()->num_rows > 0;
-        ?>
-
-        <div class="card p-3">
-            <div class="card-title"><?= htmlspecialchars($camp['nome']) ?></div>
-            <div class="info">Categoria: <?= htmlspecialchars($camp['categoria']) ?> anos</div>
-            <div class="info">Técnico: <?= htmlspecialchars($camp['tecnico_nome']) ?></div>
-            <?php if ($convocado): ?>
-                <div class="convocado"><i class="bi bi-check-circle-fill"></i> Você foi convocado!</div>
-            <?php endif; ?>
+        <div class="campeonatos-container">
+            <?php
+            if ($result->num_rows > 0) {
+                $hoje = date('Y-m-d');
+                while($row = $result->fetch_assoc()) {
+                    $classe = ($row['data'] >= $hoje) ? 'futuro' : 'passado';
+                    echo '<div class="campeonato-card ' . $classe . '">';
+                    echo '<h2>' . htmlspecialchars($row['nome']) . '</h2>';
+                    echo '<p><strong>Idade mínima:</strong> ' . htmlspecialchars($row['idade_minima']) . '</p>';
+                    echo '<p><strong>Idade máxima:</strong> ' . htmlspecialchars($row['idade_maxima']) . '</p>';
+                    echo '<p><strong>Rodadas:</strong> ' . htmlspecialchars($row['rodadas']) . '</p>';
+                    echo '<p><strong>Data:</strong> ' . date("d/m/Y", strtotime($row['data'])) . '</p>';
+                    echo '</div>';
+                }
+            } else {
+                echo "<p>Nenhum campeonato cadastrado.</p>";
+            }
+            $conn->close();
+            ?>
         </div>
+    </section>
+</main>
 
-    <?php endwhile; ?>
-</div>
-
-<!-- Rodapé fixo com ícones -->
-<div class="footer-icons">
-    <a href="home.php"><i class="bi bi-house-fill"></i></a>
-    <a href="treinos.php"><i class="bi bi-calendar-check-fill"></i></a>
-    <a href="jogos.php"><i class="bi bi-trophy-fill"></i></a>
-    <a href="perfil.php"><i class="bi bi-person-fill"></i></a>
-</div>
+<div id="nav-placeholder"></div>
+<script src="../../js/nav.js"></script>
 
 </body>
 </html>

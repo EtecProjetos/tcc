@@ -6,14 +6,8 @@ if(!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true){
     header("Location: admin.php");
     exit;
 }
-
-// Logout
-if(isset($_GET['logout'])){
-    session_destroy();
-    header("Location: index.php");
-    exit;
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -29,13 +23,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* centraliza verticalmente */
+    justify-content: center;
     min-height: 100vh;
     padding: 0 15px;
 }
 
 h1 {
-    margin-bottom: 50px; /* espaço entre a mensagem e os botões */
+    margin-bottom: 50px;
     font-size: 2.5rem;
     font-weight: bold;
     text-transform: uppercase;
@@ -48,7 +42,7 @@ h1 {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    justify-content: center; /* centraliza horizontalmente */
+    justify-content: center;
     width: 100%;
     max-width: 650px;
 }
@@ -80,9 +74,10 @@ button:hover {
 <div class="buttons-container">
     <button onclick="location.href='CriarContaAluno.php'">Cadastrar Aluno</button>
     <button onclick="location.href='CriarContaProfessor.php'">Cadastrar Professor</button>
-    <button class="popup-btn" onclick="location.href='index.php'">
-      <i class="bi bi-door-closed-fill"></i> Sair
-    </button>
+    <button onclick="location.href='cadastrar_campeonato.php'">Cadastrar Campeonato</button>
+    <button onclick="location.href='gerenciar_aluno_admin.php'">Gerenciar Alunos</button>
+    <button onclick="location.href='convocacoes_jogo.php'">Convocações para Campeonatos</button>
+    <button onclick="location.href='index.php'">Sair</button>
 </div>
 
 </body>

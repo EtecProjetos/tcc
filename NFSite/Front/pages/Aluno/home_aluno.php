@@ -8,18 +8,26 @@ if (!isset($_SESSION['aluno_id'])) {
 }
 
 // Conexão com o banco
-include '../../../Back/conexao.php';  // Corrigido para 3 níveis acima
+include '../../../Back/conexao.php';
 
 $aluno_nome = '';
-$aluno_id = $_SESSION['aluno_id'];
+$turma_nome = 'Sem turma';
+$aluno_id   = $_SESSION['aluno_id'];
 
-// Consulta para obter o nome do aluno
-$stmt = $conn->prepare("SELECT nome FROM alunos WHERE id = ?");
+// Consulta para obter o nome do aluno e o nome da turma
+$stmt = $conn->prepare("
+    SELECT p.nome AS aluno_nome, t.nome AS turma_nome
+    FROM alunos a
+    INNER JOIN pessoa p ON a.pessoa = p.id
+    LEFT JOIN turmas t ON a.turma_id = t.id
+    WHERE a.pessoa = ?
+");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
-$stmt->bind_result($nome);
+$stmt->bind_result($nome, $turma);
 if ($stmt->fetch()) {
     $aluno_nome = $nome;
+    if ($turma) $turma_nome = $turma;
 }
 $stmt->close();
 ?>
@@ -27,13 +35,13 @@ $stmt->close();
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Home Aluno - New Football</title>
 
-  <link rel="stylesheet" href="../../styles/styleHomeAluno.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
+<link rel="stylesheet" href="../../styles/styleHomeAluno.css" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 </head>
 <body>
   <!-- Logo -->
@@ -41,22 +49,19 @@ $stmt->close();
     <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
   </header>
 
-  <!-- Incluir a Navbar -->
+  <!-- Navbar -->
   <?php include './nav.php'; ?>
 
   <!-- Conteúdo principal -->
   <main class="content">
     <section class="intro-text">
-      <h2 style="color: #FFD700; font-weight: 700;">
-        Bem-vindo, <?= htmlspecialchars($aluno_nome) ?>!
-      </h2>
+      <h2>Bem-vindo, <?= htmlspecialchars($aluno_nome) ?>!</h2>
       <h1>O New Football é o lugar perfeito para você aprender, evoluir e se divertir com o futebol.</h1>
       <h2>Aqui você cresce como craque e como pessoa</h2>
     </section>
+
+    <!-- Cards com links rápidos -->
+
   </main>
-
-  <!-- Placeholder da navbar inferior -->
-  <div id="nav-placeholder"></div>
-
 </body>
 </html>

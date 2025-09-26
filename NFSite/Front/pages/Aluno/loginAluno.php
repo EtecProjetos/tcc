@@ -1,6 +1,11 @@
 <?php
 session_start();
-// include '../Back/conexao.php'; // opcional, apenas se precisar de conexão aqui
+
+// Redireciona se já estiver logado
+if (isset($_SESSION['aluno_id'])) {
+    header("Location: home_aluno.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -9,11 +14,11 @@ session_start();
     <title>Login Aluno - New Football</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
-    
     <style>
         * { box-sizing: border-box; }
         body {
-            margin: 0;     background: linear-gradient(135deg, #000000, #4c0070); /* Degradê preto → roxo */; font-family: Arial, sans-serif; color: white;
+            margin: 0; background: linear-gradient(135deg, #000000, #4c0070); 
+            font-family: Arial, sans-serif; color: white;
             display: flex; justify-content: center; align-items: center; height: 100vh; padding: 15px;
         }
         .login-container {
@@ -21,9 +26,9 @@ session_start();
             box-shadow: 0 4px 10px rgba(0,0,0,0.4); width: 100%; max-width: 400px; text-align: center;
         }
         .login-container h2 { margin-top: 0; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-        .erro, .sucesso { margin-bottom: 15px; font-weight: bold; color: #ffd700; }
+        .erro { margin-bottom: 15px; font-weight: bold; color: #ff4d4d; }
+        .sucesso { margin-bottom: 15px; font-weight: bold; color: #90ee90; }
         form { text-align: left; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.95rem; }
         .input-icon { position: relative; margin-bottom: 20px; }
         .input-icon i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #4b0082; font-size: 1.3rem; pointer-events: none; }
         input[type="email"], input[type="password"] {
@@ -94,13 +99,15 @@ session_start();
     </form>
 
     <div class="btn-group">
-        <button class="btn-aluno">
+        <button class="btn-aluno" onclick="location.reload()">
             <i class="bi bi-person-fill"></i> Aluno
         </button>
         <button class="btn-professor" onclick="location.href='loginProfessor.php'">
             <i class="bi bi-person-badge-fill"></i> Professor
         </button>
     </div>
+
+
 </div>
 
 </body>

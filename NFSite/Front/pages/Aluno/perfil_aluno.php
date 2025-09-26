@@ -1,22 +1,22 @@
 <?php
 session_start();
+include '../../../Back/conexao.php';
 
-// Impede cache da página
+// Impede cache
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 
-// Verifica se o aluno está logado
+// Verifica login do aluno
 if (!isset($_SESSION['aluno_id'])) {
     header("Location: loginAluno.php");
     exit();
 }
 
-include '../../../Back/conexao.php';
-
 $erro = '';
 $sucesso = '';
+$aluno_id = $_SESSION['aluno_id'];
 
-// Recupera e limpa mensagens da sessão
+// Recupera mensagens
 if (isset($_SESSION['mensagem_sucesso'])) {
     $sucesso = $_SESSION['mensagem_sucesso'];
     unset($_SESSION['mensagem_sucesso']);
@@ -26,14 +26,12 @@ if (isset($_SESSION['mensagem_erro'])) {
     unset($_SESSION['mensagem_erro']);
 }
 
-$aluno_id = $_SESSION['aluno_id'] ?? 1;
-
 function h($str) {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
 
-// Processa atualização do perfil
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'atualizar_perfil') {
+// Atualiza perfil
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'atualizar_perfil') {
     $nome = trim($_POST['nome']);
     $data_nascimento = $_POST['data_nascimento'];
     $cpf = trim($_POST['cpf']);
@@ -48,33 +46,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         exit;
     }
 
-    // Busca dados atuais do aluno
-    $stmt = $conn->prepare("SELECT nome, data_nascimento, cpf, email, telefone, nome_responsavel, cpf_responsavel FROM alunos WHERE id = ?");
+    // Busca dados atuais
+    $stmt = $conn->prepare("
+        SELECT p.id AS pessoa_id, p.nome AS pessoa_nome, p.data_nascimento, p.cpf, p.email, p.telefone,
+               a.nome_responsavel, a.cpf_responsavel
+        FROM alunos a
+        JOIN pessoa p ON a.pessoa = p.id
+        WHERE a.pessoa = ?
+    ");
     $stmt->bind_param("i", $aluno_id);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $dados_atuais = $result->fetch_assoc();
+    $res = $stmt->get_result();
+    $dados = $res->fetch_assoc();
     $stmt->close();
 
-    // Verifica se houve alterações
+    if (!$dados) {
+        $_SESSION['mensagem_erro'] = 'Aluno não encontrado.';
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+
+    $pessoa_id = $dados['pessoa_id'];
+
     $alterou = (
-        $nome !== $dados_atuais['nome'] ||
-        $data_nascimento !== $dados_atuais['data_nascimento'] ||
-        $cpf !== $dados_atuais['cpf'] ||
-        $email !== $dados_atuais['email'] ||
-        $telefone !== $dados_atuais['telefone'] ||
-        $nome_responsavel !== $dados_atuais['nome_responsavel'] ||
-        $cpf_responsavel !== $dados_atuais['cpf_responsavel']
+        $nome !== $dados['pessoa_nome'] ||
+        $data_nascimento !== $dados['data_nascimento'] ||
+        $cpf !== $dados['cpf'] ||
+        $email !== $dados['email'] ||
+        $telefone !== $dados['telefone'] ||
+        $nome_responsavel !== $dados['nome_responsavel'] ||
+        $cpf_responsavel !== $dados['cpf_responsavel']
     );
 
     if ($alterou) {
-        // Atualiza perfil no banco
-        $stmt = $conn->prepare("UPDATE alunos SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=?, nome_responsavel=?, cpf_responsavel=? WHERE id=?");
-        $stmt->bind_param("sssssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $nome_responsavel, $cpf_responsavel, $aluno_id);
+        // Atualiza pessoa
+        $stmt = $conn->prepare("UPDATE pessoa SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=? WHERE id=?");
+        $stmt->bind_param("sssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $pessoa_id);
+        $stmt->execute();
+        $stmt->close();
+
+        // Atualiza aluno
+        $stmt = $conn->prepare("UPDATE alunos SET nome_responsavel=?, cpf_responsavel=? WHERE pessoa=?");
+        $stmt->bind_param("ssi", $nome_responsavel, $cpf_responsavel, $aluno_id);
         if ($stmt->execute()) {
             $_SESSION['mensagem_sucesso'] = 'Perfil atualizado com sucesso!';
         } else {
-            $_SESSION['mensagem_erro'] = 'Erro ao atualizar o perfil: ' . $conn->error;
+            $_SESSION['mensagem_erro'] = 'Erro ao atualizar perfil: ' . $conn->error;
         }
         $stmt->close();
     } else {
@@ -85,32 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     exit;
 }
 
-// Busca dados do aluno
-$stmt = $conn->prepare("SELECT * FROM alunos WHERE id = ?");
+// Busca dados para preencher formulário
+$stmt = $conn->prepare("
+    SELECT p.nome AS pessoa_nome, p.data_nascimento, p.cpf, p.email, p.telefone,
+           a.nome_responsavel, a.cpf_responsavel
+    FROM alunos a
+    JOIN pessoa p ON a.pessoa = p.id
+    WHERE a.pessoa = ?
+");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
-$result = $stmt->get_result();
-$aluno = $result->fetch_assoc();
+$res = $stmt->get_result();
+$aluno = $res->fetch_assoc();
 $stmt->close();
 
-if (!$aluno) {
-    die("Aluno não encontrado.");
-}
-
+if (!$aluno) die("Aluno não encontrado.");
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Perfil</title>
+<title>Perfil do Aluno</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<!-- Ícones Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-<!-- Fonte Fredoka -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 
@@ -118,11 +134,10 @@ if (!$aluno) {
 body {
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: 'Fredoka', sans-serif;
     margin: 0;
     padding-bottom: 120px;
 }
-
 .container {
     max-width: 600px;
     margin: 30px auto 100px auto;
@@ -130,88 +145,29 @@ body {
     border-radius: 15px;
     padding: 20px 30px 40px 30px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    text-align: left;
 }
 .container:hover {
-    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7); /* sombra preta */
-    transition: box-shadow 0.5s ease; /* transição suave */
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7);
+    transition: box-shadow 0.5s ease;
 }
-
-h1 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: bold;
+h1 { text-align: center; margin-bottom: 25px; font-weight: bold; }
+label { display: block; margin-top: 15px; font-weight: bold; }
+input[type=text], input[type=date], input[type=email], input[type=tel] {
+    width: 100%; padding: 10px; margin-top: 6px; border-radius: 8px; border: none; font-size: 1em; box-sizing: border-box;
 }
-
-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
+.btn_salvar {
+    margin-top: 20px; background-color: #ffd700; border: none; color: #4b0082;
+    font-weight: bold; font-size: 1.2em; padding: 12px; border-radius: 25px; cursor: pointer; width: 100%; transition: background-color 0.3s ease;
 }
-
-input[type=text],
-input[type=date],
-input[type=email],
-input[type=tel],
-input[type=password] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1em;
-    box-sizing: border-box;
+input[type=submit]:hover, button:hover { background-color: #ffe34d; } 
+.msg-error, .msg-success { text-align: center; margin-bottom: 20px; padding: 12px; border-radius: 12px; font-weight: bold; } 
+.msg-error { background-color: #a80000; color: white; }
+.msg-success { background-color: #2e8b57; color: white; }
+@media (max-width: 650px) {
+    .container { margin: 15px 15px 100px 15px; padding: 15px 20px 30px 20px; }
 }
-
-.btn_salvar{
-    margin-top: 20px;
-    background-color: #ffd700;
-    border: none;
-    color: #4b0082;
-    font-weight: bold;
-    font-size: 1.2em;
-    padding: 12px;
-    border-radius: 25px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-input[type=submit]:hover, button:hover {
-    background-color: #ffe34d;
-} 
-
-.msg-error, .msg-success {
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: bold;
-} 
- .msg-error {
-    background-color: #a80000;
-    color: white;
-}
-.msg-success {
-    background-color: #2e8b57;
-    color: white;
-} 
-
- @media (max-width: 650px) {
-    .container {
-        margin: 15px 15px 100px 15px;
-        padding: 15px 20px 30px 20px;
-    }
-} 
-
-header.logo-header {
-    margin-bottom: 30px;
-}
-header.logo-header .logo {
-    width: 180px;
-    display: block;
-    margin: 0 auto;
-}
+header.logo-header { margin-bottom: 30px; }
+header.logo-header .logo { width: 180px; display: block; margin: 0 auto; }
 </style>
 </head>
 <header class="logo-header">
@@ -220,7 +176,7 @@ header.logo-header .logo {
 <body>
 
 <div class="container">
-    <h1>Perfil</h1>
+    <h1>Perfil do Aluno</h1>
 
     <?php if ($erro): ?>
         <div class="msg-error"><?= h($erro) ?></div>
@@ -229,19 +185,18 @@ header.logo-header .logo {
     <?php endif; ?>
 
     <form method="post" action="">
-
         <input type="hidden" name="acao" value="atualizar_perfil" />
 
-        <label for="nome">Nome </label>
-        <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($aluno['nome']) ?>" />
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($aluno['pessoa_nome']) ?>" />
 
-        <label for="data_nascimento">Data de Nascimento </label>
+        <label for="data_nascimento">Data de Nascimento</label>
         <input type="date" id="data_nascimento" name="data_nascimento" required value="<?= h($aluno['data_nascimento']) ?>" />
 
-        <label for="cpf">CPF </label>
+        <label for="cpf">CPF</label>
         <input type="text" id="cpf" name="cpf" required maxlength="14" placeholder="000.000.000-00" value="<?= h($aluno['cpf']) ?>" />
 
-        <label for="email">E-mail </label>
+        <label for="email">E-mail</label>
         <input type="email" id="email" name="email" required maxlength="100" value="<?= h($aluno['email']) ?>" />
 
         <label for="telefone">Telefone</label>
@@ -258,8 +213,6 @@ header.logo-header .logo {
 </div>
 
 <div id="nav-placeholder"></div>
-
-<!-- Script externo para controle da navbar -->
 <script src="../../js/nav.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {

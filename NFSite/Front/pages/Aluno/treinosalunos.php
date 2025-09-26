@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../../Back/conexao.php';  // Corrigido para 3 níveis acima
+include '../../../Back/conexao.php';
 
 // Verifica se o aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
@@ -11,28 +11,32 @@ if (!isset($_SESSION['aluno_id'])) {
 $aluno_id = $_SESSION['aluno_id'];
 $treinos = [];
 
-// Busca a turma do aluno
-$sql_turma = "SELECT turma_id FROM alunos WHERE id = ?";
+// Busca a turma do aluno e nome da turma
+$sql_turma = "
+    SELECT a.turma_id, t.nome AS turma_nome
+    FROM alunos a
+    LEFT JOIN turmas t ON a.turma_id = t.id
+    WHERE a.pessoa = ?
+";
 $stmt_turma = $conn->prepare($sql_turma);
 $stmt_turma->bind_param("i", $aluno_id);
 $stmt_turma->execute();
 $res_turma = $stmt_turma->get_result();
 
+$turma_id = null;
+$turma_nome = 'Sem turma';
+
 if ($res_turma && $res_turma->num_rows > 0) {
     $row_turma = $res_turma->fetch_assoc();
     $turma_id = $row_turma['turma_id'];
+    if ($row_turma['turma_nome']) $turma_nome = $row_turma['turma_nome'];
+}
 
-    // Apaga treinos antigos dessa turma
-    $sql_delete = "DELETE FROM treinos WHERE data < CURDATE() AND turma_id = ?";
-    $stmt_delete = $conn->prepare($sql_delete);
-    $stmt_delete->bind_param("i", $turma_id);
-    $stmt_delete->execute();
-
-    // Busca os treinos da turma do aluno a partir da data atual
+// Se houver turma, busca treinos futuros
+if ($turma_id) {
     $sql = "
-        SELECT t.id, t.data, t.horario, tur.nome AS turma_nome, tur.dias_trino
+        SELECT t.id, t.data, t.horario
         FROM treinos t
-        JOIN turmas tur ON t.turma_id = tur.id
         WHERE t.data >= CURDATE() AND t.turma_id = ?
         ORDER BY t.data, t.horario
         LIMIT 10
@@ -43,21 +47,16 @@ if ($res_turma && $res_turma->num_rows > 0) {
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        // Dias da semana em português
         $dias_semana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 
         while ($row = $result->fetch_assoc()) {
-            // Pega o índice do dia da semana e o nome correspondente
             $indice_dia = date('w', strtotime($row['data']));
             $dia_semana = strtoupper($dias_semana[$indice_dia]);
 
-            // Prepara o array de treinos com formatações para a tela
             $treinos[] = [
                 'data_formatada' => date('d/m', strtotime($row['data'])),
                 'dia_semana' => $dia_semana,
-                'horario' => date('H:i', strtotime($row['horario'])),
-                'turma' => $row['turma_nome'],
-                'dias_treino' => $row['dias_trino']
+                'horario' => date('H:i', strtotime($row['horario']))
             ];
         }
     }
@@ -70,9 +69,8 @@ $conn->close();
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <title>Treinos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <!-- Caminho do CSS corrigido -->
+    <title>Treinos - <?= htmlspecialchars($turma_nome) ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../../styles/styleTreinosAlunos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
@@ -84,7 +82,7 @@ $conn->close();
 </header>
 
 <div class="title">
-    <h2>DIAS DE TREINOS</h2>
+    <h2>DIAS DE TREINOS - <?= htmlspecialchars($turma_nome) ?></h2>
 </div>
 
 <div id="treinos-container">
@@ -119,13 +117,8 @@ $conn->close();
     <?php endif; ?>
 </div>
 
-<!-- Caminho para a navbar corrigido -->
 <div id="nav-placeholder"></div>
 
-<br><br><br>
-
-<!-- Caminho do JavaScript corrigido -->
 <script src="../../js/nav.js"></script>
-
 </body>
 </html>

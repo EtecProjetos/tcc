@@ -2,16 +2,17 @@
 session_start();
 include '../../../Back/conexao.php';
 
-// Verifica se aluno está logado
+// Verifica se o aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
     header("Location: loginAluno.php");
     exit();
 }
 
 $aluno_id = $_SESSION['aluno_id'];
+$jogos = [];
 
 // Pega a turma do aluno
-$sql_turma = "SELECT turma_id FROM alunos WHERE id = ?";
+$sql_turma = "SELECT turma_id FROM alunos WHERE pessoa = ?";
 $stmt = $conn->prepare($sql_turma);
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
@@ -19,7 +20,7 @@ $res_turma = $stmt->get_result();
 $turma_id = ($res_turma->num_rows > 0) ? $res_turma->fetch_assoc()['turma_id'] : null;
 $stmt->close();
 
-$jogos = [];
+// Busca jogos futuros da turma
 if ($turma_id) {
     $sql_jogos = "
         SELECT * FROM jogos 
@@ -50,7 +51,7 @@ if ($turma_id) {
 <style>
 body {
     margin: 0;
-    padding: 20px 20px 100px; /* Espaço para navbar */
+    padding: 20px 20px 100px;
     font-family: 'Fredoka', sans-serif;
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
     color: #fff;
@@ -60,13 +61,11 @@ body {
     align-items: center;
 }
 
-/* Header principal com logo */
 .logo-header {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px 0;
-    background: transparent;
     width: 100%;
 }
 
@@ -75,7 +74,6 @@ body {
     height: auto;
 }
 
-/* Container dos jogos */
 #jogos-container {
     width: 100%;
     max-width: 720px;
@@ -84,7 +82,6 @@ body {
     gap: 20px;
 }
 
-/* Card de cada jogo */
 .card-jogo {
     background: rgba(138, 58, 185, 0.9);
     border-radius: 12px;
@@ -98,18 +95,16 @@ body {
 
 .card-jogo:hover {
     background-color: #b265d1;
-    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7); /* sombra preta */
-    transition: box-shadow 0.5s ease; /* transição suave */
+    box-shadow: 0 0 15px 5px rgba(0,0,0,0.7);
 }
 
-/* Versus: logos lado a lado */
 .versus {
     display: flex;
-    justify-content: space-between; /* Deixe a distribuição equilibrada */
-    align-items: center; /* Centraliza verticalmente o conteúdo, incluindo o ícone */
-    gap: 20px; /* Espaço entre os times */
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
     font-weight: bold;
-    flex-wrap: nowrap; /* Evita quebra de linha no espaço entre os times */
+    flex-wrap: nowrap;
 }
 
 .time-bloco {
@@ -128,13 +123,12 @@ body {
 .bi-x-lg {
     font-size: 36px;
     color: white;
-    display: flex; /* Faz o ícone se comportar como um bloco flexível */
-    justify-content: center; /* Centraliza o conteúdo dentro do ícone */
-    align-items: center; /* Centraliza verticalmente o ícone */
-    flex-shrink: 0; /* Impede o ícone de diminuir de tamanho */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
 }
 
-/* Container para infos em desktop (2 colunas) */
 .infos-jogo {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -153,25 +147,11 @@ body {
     justify-content: flex-start;
 }
 
-/* Responsividade para celular */
 @media (max-width: 600px) {
-    .versus {
-        gap: 12px;
-        font-size: 0.9rem;
-    }
-    .logo-time, .logo {
-        width: 60px;
-        height: 60px;
-    }
-    .bi-x-lg {
-        font-size: 28px;
-    }
-
-    /* Infos empilhadas em celular */
-    .infos-jogo {
-        display: flex;
-        flex-direction: column;
-    }
+    .versus { gap: 12px; font-size: 0.9rem; }
+    .logo-time, .logo { width: 60px; height: 60px; }
+    .bi-x-lg { font-size: 28px; }
+    .infos-jogo { display: flex; flex-direction: column; }
 }
 </style>
 </head>
@@ -185,9 +165,8 @@ body {
 <?php if (count($jogos) > 0): ?>
     <?php foreach ($jogos as $jogo): ?>
         <div class="card-jogo">
-
             <div class="versus">
-                                <div class="time-bloco">
+                <div class="time-bloco">
                     <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
                     <span class="time-nome">NEW FOOTBALL</span>
                 </div>
@@ -195,21 +174,16 @@ body {
                     <img src="<?= htmlspecialchars($jogo['logo_url']) ?>" alt="Logo Adversário" class="logo-time" />
                     <span class="time-nome"><?= mb_strtoupper(htmlspecialchars($jogo['adversario']), 'UTF-8') ?></span>
                 </div>
-
-        
             </div>
 
             <div class="infos-jogo">
-
                 <div class="info"><i class="bi bi-house"></i> LOCAL: <?= mb_strtoupper(htmlspecialchars($jogo['local']), 'UTF-8') ?></div>
                 <div class="info"><i class="bi bi-clock"></i> HORÁRIO: <?= date("H:i", strtotime($jogo['horario'])) ?></div>
                 <div class="info"><i class="bi bi-calendar-event"></i> DATA: <?= date('d/m/Y', strtotime($jogo['data'])) ?></div>
                 <div class="info"><i class="bi bi-list"></i> CATEGORIA: <?= mb_strtoupper(htmlspecialchars($jogo['categoria']), 'UTF-8') ?></div>
                 <div class="info"><i class="bi bi-person-lines-fill"></i> ADVERSÁRIO: <?= mb_strtoupper(htmlspecialchars($jogo['adversario']), 'UTF-8') ?></div>
                 <div class="info"><i class="bi bi-tag"></i> TIPO: <?= mb_strtoupper(htmlspecialchars($jogo['tipo']), 'UTF-8') ?></div>
-
             </div>
-
         </div>
     <?php endforeach; ?>
 <?php else: ?>
