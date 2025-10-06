@@ -18,7 +18,7 @@
             <li><a href="contato.php" class="nav-link">Contato</a></li>
             <!-- Botão Login Aluno -->
             <li class="ml-3">
-              <a href="../loginAluno.php" class="btn-login">Login Aluno</a>
+              <a href="../pages/Aluno/loginAluno.php" class="btn-login">Login</a>
             </li>
           </ul>
         </nav>

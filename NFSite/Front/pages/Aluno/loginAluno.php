@@ -11,9 +11,10 @@ if (isset($_SESSION['aluno_id'])) {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <title>Login Aluno - New Football</title>
+    <title>Login Aluno</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
+    <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
     <style>
         * { box-sizing: border-box; }
         body {
@@ -102,7 +103,7 @@ if (isset($_SESSION['aluno_id'])) {
         <button class="btn-aluno" onclick="location.reload()">
             <i class="bi bi-person-fill"></i> Aluno
         </button>
-        <button class="btn-professor" onclick="location.href='loginProfessor.php'">
+        <button class="btn-professor" onclick="location.href='../professor/loginProfessor.php'">
             <i class="bi bi-person-badge-fill"></i> Professor
         </button>
     </div>

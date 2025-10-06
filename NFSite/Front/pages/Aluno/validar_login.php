@@ -10,22 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$tipo  = $_POST['tipo'] ?? 'aluno';
 $email = trim($_POST['email'] ?? '');
 $senha = trim($_POST['senha'] ?? '');
 
-// Apenas login de aluno por enquanto
-if ($tipo !== 'aluno') {
-    $_SESSION['erro_login'] = 'Tipo de login inválido.';
-    header('Location: loginAluno.php');
-    exit;
-}
-
-// Consulta aluno + pessoa (nome, email, senha, turma)
-$sql = "SELECT a.pessoa AS aluno_id, a.turma_id, p.nome, p.email, p.senha
-        FROM alunos a
-        INNER JOIN pessoa p ON a.pessoa = p.id
-        WHERE p.email = ?";
+// Consulta na tabela alunos
+$sql = "SELECT id AS aluno_id, turma_id, nome, email, senha
+        FROM alunos
+        WHERE email = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -66,3 +57,4 @@ if ($res && $res->num_rows === 1) {
 $_SESSION['erro_login'] = 'E-mail ou senha incorretos.';
 header('Location: loginAluno.php');
 exit;
+?>

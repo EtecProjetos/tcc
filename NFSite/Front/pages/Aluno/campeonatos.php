@@ -3,7 +3,7 @@ session_start();
 
 // Verifica se o aluno está logado
 if (!isset($_SESSION['aluno_id'])) {
-    header("Location: loginAluno.php");
+    header("Location: Divulgacao_New/index.php");
     exit();
 }
 
@@ -17,8 +17,8 @@ $aluno_id = $_SESSION['aluno_id'];
 $stmt = $conn->prepare("
     SELECT p.nome
     FROM alunos a
-    JOIN pessoa p ON a.pessoa = p.id
-    WHERE a.pessoa = ?
+    JOIN pessoa p ON a.id = p.id
+    WHERE a.id = ?
 ");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
@@ -96,9 +96,6 @@ h1.campeonatos-title {
 
 <main class="content">
     <section class="intro-text">
-        <h2 style="color: #FFD700; font-weight: 700;">
-            Bem-vindo, <?= htmlspecialchars($aluno_nome) ?>!
-        </h2>
         <h1 class="campeonatos-title">Campeonatos</h1>
         <a href="home_aluno.php" class="btn-voltar">← Voltar</a>
 

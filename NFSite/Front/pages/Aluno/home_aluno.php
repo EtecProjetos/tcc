@@ -16,11 +16,10 @@ $aluno_id   = $_SESSION['aluno_id'];
 
 // Consulta para obter o nome do aluno e o nome da turma
 $stmt = $conn->prepare("
-    SELECT p.nome AS aluno_nome, t.nome AS turma_nome
+    SELECT a.nome AS aluno_nome, t.nome AS turma_nome
     FROM alunos a
-    INNER JOIN pessoa p ON a.pessoa = p.id
     LEFT JOIN turmas t ON a.turma_id = t.id
-    WHERE a.pessoa = ?
+    WHERE a.id = ?
 ");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
@@ -30,14 +29,16 @@ if ($stmt->fetch()) {
     if ($turma) $turma_nome = $turma;
 }
 $stmt->close();
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Home Aluno - New Football</title>
+<title>Home</title>
 
 <link rel="stylesheet" href="../../styles/styleHomeAluno.css" />
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -60,8 +61,9 @@ $stmt->close();
       <h2>Aqui você cresce como craque e como pessoa</h2>
     </section>
 
-    <!-- Cards com links rápidos -->
-
+    <!-- Aqui você pode adicionar cards ou links rápidos -->
   </main>
+  <div id="nav-placeholder"></div>
+<script src="../../js/nav.js"></script>
 </body>
 </html>

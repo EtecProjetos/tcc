@@ -16,16 +16,6 @@ $erro = '';
 $sucesso = '';
 $aluno_id = $_SESSION['aluno_id'];
 
-// Recupera mensagens
-if (isset($_SESSION['mensagem_sucesso'])) {
-    $sucesso = $_SESSION['mensagem_sucesso'];
-    unset($_SESSION['mensagem_sucesso']);
-}
-if (isset($_SESSION['mensagem_erro'])) {
-    $erro = $_SESSION['mensagem_erro'];
-    unset($_SESSION['mensagem_erro']);
-}
-
 function h($str) {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
@@ -41,74 +31,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'atualiz
     $cpf_responsavel = trim($_POST['cpf_responsavel']);
 
     if (!$nome || !$data_nascimento || !$cpf || !$email) {
-        $_SESSION['mensagem_erro'] = 'Preencha os campos obrigatórios.';
-        header('Location: ' . $_SERVER['PHP_SELF']);
-        exit;
-    }
-
-    // Busca dados atuais
-    $stmt = $conn->prepare("
-        SELECT p.id AS pessoa_id, p.nome AS pessoa_nome, p.data_nascimento, p.cpf, p.email, p.telefone,
-               a.nome_responsavel, a.cpf_responsavel
-        FROM alunos a
-        JOIN pessoa p ON a.pessoa = p.id
-        WHERE a.pessoa = ?
-    ");
-    $stmt->bind_param("i", $aluno_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $dados = $res->fetch_assoc();
-    $stmt->close();
-
-    if (!$dados) {
-        $_SESSION['mensagem_erro'] = 'Aluno não encontrado.';
-        header('Location: ' . $_SERVER['PHP_SELF']);
-        exit;
-    }
-
-    $pessoa_id = $dados['pessoa_id'];
-
-    $alterou = (
-        $nome !== $dados['pessoa_nome'] ||
-        $data_nascimento !== $dados['data_nascimento'] ||
-        $cpf !== $dados['cpf'] ||
-        $email !== $dados['email'] ||
-        $telefone !== $dados['telefone'] ||
-        $nome_responsavel !== $dados['nome_responsavel'] ||
-        $cpf_responsavel !== $dados['cpf_responsavel']
-    );
-
-    if ($alterou) {
-        // Atualiza pessoa
-        $stmt = $conn->prepare("UPDATE pessoa SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=? WHERE id=?");
-        $stmt->bind_param("sssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $pessoa_id);
-        $stmt->execute();
-        $stmt->close();
-
-        // Atualiza aluno
-        $stmt = $conn->prepare("UPDATE alunos SET nome_responsavel=?, cpf_responsavel=? WHERE pessoa=?");
-        $stmt->bind_param("ssi", $nome_responsavel, $cpf_responsavel, $aluno_id);
-        if ($stmt->execute()) {
-            $_SESSION['mensagem_sucesso'] = 'Perfil atualizado com sucesso!';
-        } else {
-            $_SESSION['mensagem_erro'] = 'Erro ao atualizar perfil: ' . $conn->error;
-        }
-        $stmt->close();
+        $erro = 'Preencha os campos obrigatórios.';
     } else {
-        $_SESSION['mensagem_erro'] = 'Nenhuma alteração detectada.';
-    }
+        // Busca dados atuais
+        $stmt = $conn->prepare("
+            SELECT nome, data_nascimento, cpf, email, telefone, nome_responsavel, cpf_responsavel
+            FROM alunos
+            WHERE id = ?
+        ");
+        $stmt->bind_param("i", $aluno_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $dados = $res->fetch_assoc();
+        $stmt->close();
 
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
+        if (!$dados) {
+            $erro = 'Aluno não encontrado.';
+        } else {
+            // Verifica se houve alteração
+            $alterou = (
+                $nome !== $dados['nome'] ||
+                $data_nascimento !== $dados['data_nascimento'] ||
+                $cpf !== $dados['cpf'] ||
+                $email !== $dados['email'] ||
+                $telefone !== $dados['telefone'] ||
+                $nome_responsavel !== $dados['nome_responsavel'] ||
+                $cpf_responsavel !== $dados['cpf_responsavel']
+            );
+
+            if ($alterou) {
+                // Atualiza os dados
+                $stmt = $conn->prepare("
+                    UPDATE alunos
+                    SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=?, nome_responsavel=?, cpf_responsavel=?
+                    WHERE id=?
+                ");
+                $stmt->bind_param("sssssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $nome_responsavel, $cpf_responsavel, $aluno_id);
+
+                if ($stmt->execute()) {
+                    $sucesso = 'Perfil atualizado com sucesso!';
+                } else {
+                    $erro = 'Erro ao atualizar perfil: ' . $conn->error;
+                }
+                $stmt->close();
+            } else {
+                $erro = 'Nenhuma alteração detectada.';
+            }
+        }
+    }
 }
 
-// Busca dados para preencher formulário
+// Busca dados do aluno para preencher o formulário
 $stmt = $conn->prepare("
-    SELECT p.nome AS pessoa_nome, p.data_nascimento, p.cpf, p.email, p.telefone,
-           a.nome_responsavel, a.cpf_responsavel
-    FROM alunos a
-    JOIN pessoa p ON a.pessoa = p.id
-    WHERE a.pessoa = ?
+    SELECT nome, data_nascimento, cpf, email, telefone, nome_responsavel, cpf_responsavel
+    FROM alunos
+    WHERE id = ?
 ");
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
@@ -119,15 +96,16 @@ $stmt->close();
 if (!$aluno) die("Aluno não encontrado.");
 ?>
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Perfil do Aluno</title>
+<title>Perfil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+
 <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 
 <style>
@@ -177,18 +155,18 @@ header.logo-header .logo { width: 180px; display: block; margin: 0 auto; }
 
 <div class="container">
     <h1>Perfil do Aluno</h1>
+<?php if($erro): ?>
+    <div class="msg-error"><?= h($erro) ?></div>
+<?php elseif($sucesso): ?>
+    <div class="msg-success"><?= h($sucesso) ?></div>
+<?php endif; ?>
 
-    <?php if ($erro): ?>
-        <div class="msg-error"><?= h($erro) ?></div>
-    <?php elseif ($sucesso): ?>
-        <div class="msg-success"><?= h($sucesso) ?></div>
-    <?php endif; ?>
 
     <form method="post" action="">
         <input type="hidden" name="acao" value="atualizar_perfil" />
 
         <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($aluno['pessoa_nome']) ?>" />
+        <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($aluno['nome']) ?>" />
 
         <label for="data_nascimento">Data de Nascimento</label>
         <input type="date" id="data_nascimento" name="data_nascimento" required value="<?= h($aluno['data_nascimento']) ?>" />

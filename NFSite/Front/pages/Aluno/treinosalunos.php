@@ -13,10 +13,10 @@ $treinos = [];
 
 // Busca a turma do aluno e nome da turma
 $sql_turma = "
-    SELECT a.turma_id, t.nome AS turma_nome
+    SELECT turma_id, t.nome AS turma_nome
     FROM alunos a
     LEFT JOIN turmas t ON a.turma_id = t.id
-    WHERE a.pessoa = ?
+    WHERE a.id = ?
 ";
 $stmt_turma = $conn->prepare($sql_turma);
 $stmt_turma->bind_param("i", $aluno_id);
@@ -35,10 +35,10 @@ if ($res_turma && $res_turma->num_rows > 0) {
 // Se houver turma, busca treinos futuros
 if ($turma_id) {
     $sql = "
-        SELECT t.id, t.data, t.horario
-        FROM treinos t
-        WHERE t.data >= CURDATE() AND t.turma_id = ?
-        ORDER BY t.data, t.horario
+        SELECT id, data, horario
+        FROM treinos
+        WHERE data >= CURDATE() AND turma_id = ?
+        ORDER BY data, horario
         LIMIT 10
     ";
     $stmt = $conn->prepare($sql);
@@ -69,7 +69,7 @@ $conn->close();
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <title>Treinos - <?= htmlspecialchars($turma_nome) ?></title>
+    <title>Treinos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../../styles/styleTreinosAlunos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

@@ -16,7 +16,8 @@ $ano = isset($_GET['ano']) ? (int)$_GET['ano'] : (int)date('Y');
 
 // Busca datas de treinos do aluno no mês/ano selecionados
 $stmt = $conn->prepare("
-    SELECT DISTINCT data FROM frequencia
+    SELECT DISTINCT data 
+    FROM frequencia
     WHERE aluno_id = ? AND MONTH(data) = ? AND YEAR(data) = ?
     ORDER BY data DESC
 ");
@@ -32,7 +33,8 @@ $stmt->close();
 
 // Consulta presenças do aluno
 $stmt = $conn->prepare("
-    SELECT data, presente FROM frequencia
+    SELECT data, presente
+    FROM frequencia
     WHERE aluno_id = ? AND MONTH(data) = ? AND YEAR(data) = ?
 ");
 $stmt->bind_param("iii", $aluno_id, $mes, $ano);
@@ -65,105 +67,31 @@ $porcentagem = ($total > 0) ? round(($presentes / $total) * 100, 2) : 0;
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%); /* Fundo degradê para toda a página */
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh; /* Garante que o degradê preencha a tela toda */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.container {
-    max-width: 480px;
-    width: 90%;
-    margin: 20px auto;
-    background: #fff;
-    color: #390062;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #6a0dad; /* Título em roxo */
-}
-
-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: space-between;
-}
-
-form select, form button {
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: 2px solid #6f2da8;
-    font-weight: 600;
-    color: #390062;
-    background: #e9e5f5; /* Fundo do select levemente roxo */
-}
-
-form button {
-    background: #6f2da8;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-form button:hover {
-    background: #551b9a;
-}
-
-.porcentagem {
-    font-size: 48px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #6f2da8;
-}
-
-.info p {
-    margin: 6px 0;
-    font-weight: 600;
-}
-
-.frequencia-lista {
-    background: #faf7ff;
-    color: #390062;
-    border-radius: 12px;
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.frequencia-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #d9c9f9;
-    font-weight: 600;
-    align-items: center;
-}
-
-.frequencia-item i {
-    font-size: 20px;
-}
-
+/* Mesmas estilizações que já usamos para manter o estilo consistente */
+body { font-family: 'Fredoka', sans-serif; background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%); color: #fff; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.container { max-width: 480px; width: 90%; margin: 30px auto 50px auto; background: rgba(138, 58, 185, 0.95); border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
+h2 { text-align: center; margin-bottom: 20px; color: #fff; }
+form { display: flex; gap: 10px; margin-bottom: 20px; justify-content: space-between; }
+form select, form button { padding: 8px 12px; border-radius: 10px; border: 2px solid #6f2da8; font-weight: 600; color: #390062; background: #e9e5f5; }
+form button { background: #6f2da8; color: #fff; border: none; cursor: pointer; }
+form button:hover { background: #551b9a; }
+.porcentagem { font-size: 48px; font-weight: bold; text-align: center; margin-bottom: 20px; color: #ffd700; }
+.info p { margin: 6px 0; font-weight: 600; text-align: center; }
+.frequencia-lista { background: #faf7ff; color: #390062; border-radius: 12px; padding: 10px; max-height: 300px; overflow-y: auto; }
+.frequencia-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #d9c9f9; font-weight: 600; align-items: center; }
+.frequencia-item i { font-size: 20px; }
 .presente i { color: #28a745; }
-
 .faltou i { color: #dc3545; }
-
+header.logo-header { display: flex; justify-content: center; align-items: center; padding: 15px 0; width: 100%; }
+header.logo-header img.logo { width: 150px; }
+@media (max-width: 600px) { .container { width: 95%; padding: 20px; } .porcentagem { font-size: 36px; } }
 </style>
 </head>
 <body>
+
+<header class="logo-header">
+    <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
+</header>
 
 <div class="container">
     <h2>Frequência de <?= str_pad($mes,2,'0',STR_PAD_LEFT) ?>/<?= $ano ?></h2>
@@ -175,7 +103,7 @@ form button:hover {
             <?php endfor; ?>
         </select>
         <select name="ano">
-            <?php for($y = date('Y')-2; $y <= date('Y')+0; $y++): ?>
+            <?php for($y = date('Y')-2; $y <= date('Y'); $y++): ?>
                 <option value="<?= $y ?>" <?= $y==$ano?'selected':'' ?>><?= $y ?></option>
             <?php endfor; ?>
         </select>
@@ -205,14 +133,12 @@ form button:hover {
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p>Nenhum treino encontrado para esse mês.</p>
+            <p style="text-align:center;">Nenhum treino encontrado para esse mês.</p>
         <?php endif; ?>
     </div>
 </div>
 
 <div id="nav-placeholder"></div>
 <script src="../../js/nav.js"></script>
-
-
 </body>
 </html>
