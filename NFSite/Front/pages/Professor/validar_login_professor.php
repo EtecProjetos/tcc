@@ -1,35 +1,65 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
-include '../Back/conexao.php';
 
-$email = $_POST['email'];
-$senha = $_POST['senha'];
+require_once __DIR__ . '/../../../Back/conexao.php';
 
-$sql = "SELECT * FROM professores WHERE email = ?";
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /tcc/NFSite/Front/pages/Professor/loginProfessor.php");
+    exit;
+}
+
+$email = trim($_POST['email'] ?? '');
+$senha = $_POST['senha'] ?? '';
+
+if ($email === '' || $senha === '') {
+    $_SESSION['erro_login'] = 'E-mail e senha são obrigatórios.';
+    header("Location: /tcc/NFSite/Front/pages/Professor/loginProfessor.php");
+    exit;
+}
+
+$sql = "SELECT id AS professor_id, nome, email, senha
+        FROM professores
+        WHERE email = ?
+        LIMIT 1";
+
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $email);
+if (!$stmt) {
+    $_SESSION['erro_login'] = 'Erro na query: ' . $conn->error;
+    header("Location: /tcc/NFSite/Front/pages/Professor/loginProfessor.php");
+    exit;
+}
+
+$stmt->bind_param('s', $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    $professor = $result->fetch_assoc();
+if ($result && $result->num_rows === 1) {
+    $row = $result->fetch_assoc();
+    $senha_db = $row['senha'];
 
-    if (password_verify($senha, $professor['senha']) || $senha === $professor['senha']) {
-        $_SESSION['professor_id'] = $professor['id'];
-        $_SESSION['professor_nome'] = $professor['nome'];
+    $ok = false;
+    if (password_verify($senha, $senha_db)) $ok = true;
+    elseif ($senha === $senha_db) $ok = true;
+    elseif (md5($senha) === $senha_db) $ok = true;
 
-        header("Location: home_professor.php");
+    if ($ok) {
+        $_SESSION['professor_id']   = (int)$row['professor_id'];
+        $_SESSION['professor_nome'] = $row['nome'];
+
+        $redirect = '/tcc/NFSite/Front/pages/Professor/home_professor.php';
+        header("Location: $redirect");
+        echo "<script>window.location.href = " . json_encode($redirect) . ";</script>";
         exit;
     } else {
-        $_SESSION['erro_login'] = "Senha incorreta!";
-        header("Location: loginProfessor.php");
+        $_SESSION['erro_login'] = 'Senha incorreta.';
+        header("Location: /tcc/NFSite/Front/pages/Professor/loginProfessor.php");
         exit;
     }
 } else {
-    $_SESSION['erro_login'] = "Email não encontrado!";
-    header("Location: loginProfessor.php");
+    $_SESSION['erro_login'] = 'E-mail não encontrado.';
+    header("Location: /tcc/NFSite/Front/pages/Professor/loginProfessor.php");
     exit;
 }
-?>
-
-

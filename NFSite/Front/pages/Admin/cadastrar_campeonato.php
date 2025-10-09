@@ -10,7 +10,7 @@ if(!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true){
 // Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Conecta ao banco de dados
-    include '../Back/conexao.php';
+    include '../../../back/conexao.php';
 
     // Captura os dados do formulário
     $nome = $_POST['nome'];

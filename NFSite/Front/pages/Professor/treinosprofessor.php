@@ -1,6 +1,11 @@
 <?php
-include '../back/conexao.php';
 session_start();
+
+// Caminho absoluto para a raiz do projeto
+define('ROOT_PATH', __DIR__ . '/../../../');
+
+// Inclui a conexão com o banco
+include ROOT_PATH . 'Back/conexao.php';
 
 // Verifica se o professor está logado
 if (!isset($_SESSION['professor_id'])) {
@@ -49,29 +54,33 @@ $treinos = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Treinos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gerenciar Treinos</title>
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Ícones -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet" />
+<!-- Ícones -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet">
 
-  <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
+<!-- Favicon -->
+<link rel="shortcut icon" href="../../imgs/logo.png" type="image/x-icon">
+
+<style>
 body {
     margin: 0;
     padding: 0;
     font-family: 'Fredoka', sans-serif;
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
-    color: #ffffff;
+    color: #fff;
     min-height: 100vh;
-        overflow-x: hidden;       /* evita scroll horizontal */
-    overflow-y: auto;   
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .logo-header {
@@ -116,7 +125,7 @@ form label {
     flex: 1 0 100%;
     font-weight: 500;
     margin-bottom: 8px;
-    color: #fff;
+    color: #4b0082;
 }
 form input[type="date"],
 form input[type="time"],
@@ -187,34 +196,24 @@ a.btn {
 }
 a.btn-edit {
     background-color: #2980b9;
-    color: #ffffffff;
+    color: #fff;
 }
 a.btn-edit:hover {
     background-color: #1c5980;
     transform: translateY(-2px);
 }
 .btn-delete {
-  background-color: #e74c3c; 
-  border: none;
-  color: white;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #e74c3c; 
+    border: none;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .btn-delete:hover {
-  background-color: #b8362a; 
-  color: white;
-  transform: scale(1.1);
+    background-color: #b8362a; 
+    color: white;
+    transform: scale(1.1);
 }
-
-
-/* Garante que o ícone dentro do botão fique sempre branco */
-.btn-delete i {
-  color: white !important;
-}
-.btn-edit i {
-  color: white !important;
-}
-
+.btn-delete i, .btn-edit i { color: white !important; }
 
 /* Mensagem vazio */
 .empty {
@@ -254,13 +253,17 @@ a.btn-edit:hover {
         color:#6a0dad;
     }
 }
-  </style>
+</style>
 </head>
 <body>
 
+<!-- Logo -->
 <header class="logo-header">
-  <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+  <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
 </header>
+
+<!-- Navbar -->
+<?php include 'nav_professor.php'; ?>
 
 <div class="container">
   <h1>Gerenciar Treinos</h1>
@@ -314,13 +317,13 @@ a.btn-edit:hover {
   <?php endif; ?>
 </div>
 
-<!-- Modal de Confirmação -->
+<!-- Modal de Exclusão -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-dark">
       <div class="modal-header" style="background-color:#6a0dad; color:#ffd700;">
         <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill"></i> Confirmar Exclusão</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         Tem certeza que deseja excluir este treino?<br>
@@ -333,12 +336,8 @@ a.btn-edit:hover {
     </div>
   </div>
 </div>
-  <div id="nav-placeholder"></div>
 
-  <!-- Scripts -->
-  <script src="js/nav_professor.js"></script>
-
-<script src="js/nav_professor.js"></script>
+<script src="../../js/nav_professor.js"></script>
 <script>
 function openDeleteModal(id) {
   const deleteUrl = "?excluir=" + id;
@@ -346,7 +345,7 @@ function openDeleteModal(id) {
   const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
   modal.show();
 }
-
 </script>
+
 </body>
 </html>

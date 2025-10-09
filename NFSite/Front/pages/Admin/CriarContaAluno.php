@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../back/conexao.php';
+include '../../../back/conexao.php';
 
 // Buscar turmas disponíveis
 $turmas = [];

@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
 }
 
 // Conecta ao banco de dados
-include '../Back/conexao.php';
+include '../../../back/conexao.php';
 
 // Busca os alunos
 $sql = "SELECT * FROM alunos ORDER BY nome ASC";

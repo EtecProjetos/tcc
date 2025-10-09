@@ -11,7 +11,8 @@ if (!isset($_SESSION['professor_id'])) {
     exit();
 }
 
-include '../back/conexao.php';
+// Caminho correto da conexão
+include '../../../back/conexao.php';
 
 $erro = '';
 $sucesso = '';
@@ -39,13 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'atualiz
     $email = trim($_POST['email']);
     $telefone = trim($_POST['telefone']);
 
+    // Upload da foto
+    $foto_nome = $_POST['foto_atual'] ?? '';
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg','jpeg','png','webp'])) {
+            $novo_nome = 'prof_'.$professor_id.'_'.time().'.'.$ext;
+            $destino = '../../Front/imgs/professores/'.$novo_nome;
+            if (!file_exists('../../Front/imgs/professores')) mkdir('../../Front/imgs/professores', 0777, true);
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $destino)) {
+                $foto_nome = 'imgs/professores/'.$novo_nome;
+            }
+        } else {
+            $_SESSION['mensagem_erro'] = 'Formato de imagem inválido.';
+            header('Location: '.$_SERVER['PHP_SELF']);
+            exit;
+        }
+    }
+
     if (!$nome || !$data_nascimento || !$cpf || !$email) {
         $_SESSION['mensagem_erro'] = 'Preencha os campos obrigatórios.';
         header('Location: ' . $_SERVER['PHP_SELF']);
         exit;
     }
 
-    $stmt = $conn->prepare("SELECT nome, data_nascimento, cpf, email, telefone FROM professores WHERE id = ?");
+    $stmt = $conn->prepare("SELECT nome, data_nascimento, cpf, email, telefone, foto FROM professores WHERE id = ?");
     $stmt->bind_param("i", $professor_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -57,12 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'atualiz
         $data_nascimento !== $dados_atuais['data_nascimento'] ||
         $cpf !== $dados_atuais['cpf'] ||
         $email !== $dados_atuais['email'] ||
-        $telefone !== $dados_atuais['telefone']
+        $telefone !== $dados_atuais['telefone'] ||
+        $foto_nome !== $dados_atuais['foto']
     );
 
     if ($alterou) {
-        $stmt = $conn->prepare("UPDATE professores SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=? WHERE id=?");
-        $stmt->bind_param("sssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $professor_id);
+        $stmt = $conn->prepare("UPDATE professores SET nome=?, data_nascimento=?, cpf=?, email=?, telefone=?, foto=? WHERE id=?");
+        $stmt->bind_param("ssssssi", $nome, $data_nascimento, $cpf, $email, $telefone, $foto_nome, $professor_id);
         if ($stmt->execute()) {
             $_SESSION['mensagem_sucesso'] = 'Perfil atualizado com sucesso!';
         } else {
@@ -93,11 +113,9 @@ if (!$professor) die("Professor não encontrado.");
 <meta charset="UTF-8">
 <title>Perfil Professor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-
 <style>
 body {
     background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
@@ -106,91 +124,39 @@ body {
     margin: 0;
     padding-bottom: 120px;
 }
-
-header.logo-header {
-    margin-bottom: 30px;
-    text-align: center;
-}
-header.logo-header .logo {
-    width: 180px;
-    height: auto;
-}
-
+header.logo-header { margin-bottom: 20px; text-align:center; }
+header.logo-header .logo { width: 180px; height:auto; }
 .container {
     max-width: 600px;
-    margin: 30px auto 100px auto;
+    margin: 20px auto 100px auto;
     background: rgba(138, 58, 185, 0.9);
     border-radius: 15px;
     padding: 20px 30px 40px 30px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     text-align: left;
 }
-.container:hover {
-    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.7);
-    transition: box-shadow 0.5s ease;
+h1 { text-align:center; margin-bottom:25px; font-weight:bold; }
+label { display:block; margin-top:15px; font-weight:bold; }
+input[type=text], input[type=date], input[type=email], input[type=tel], input[type=file] {
+    width:100%; padding:10px; margin-top:6px; border-radius:8px; border:none; font-size:1em; box-sizing:border-box;
 }
-
-h1 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: bold;
-}
-
-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-}
-
-input[type=text],
-input[type=date],
-input[type=email],
-input[type=tel] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1em;
-    box-sizing: border-box;
-}
-
-input[type=text]:focus,
-input[type=date]:focus,
-input[type=email]:focus,
-input[type=tel]:focus {
-    outline: 2px solid #ffd700;
-}
-
+input:focus { outline:2px solid #ffd700; }
 .btn_salvar {
-    margin-top: 20px;
-    background-color: #ffd700;
-    border: none;
-    color: #4b0082;
-    font-weight: bold;
-    font-size: 1.2em;
-    padding: 12px;
-    border-radius: 25px;
-    cursor: pointer;
-    width: 100%;
+    margin-top:20px; background-color:#ffd700; border:none; color:#4b0082; font-weight:bold;
+    font-size:1.2em; padding:12px; border-radius:25px; cursor:pointer; width:100%;
     transition: background-color 0.3s ease;
 }
-.btn_salvar:hover {
-    background-color: #ffe34d;
-}
-
+.btn_salvar:hover { background-color:#ffe34d; }
 .msg-error, .msg-success {
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: bold;
+    text-align:center; margin-bottom:20px; padding:12px; border-radius:12px; font-weight:bold;
 }
-.msg-error { background-color: #a80000; color: white; }
-.msg-success { background-color: #2e8b57; color: white; }
-
+.msg-error { background-color:#a80000; color:white; }
+.msg-success { background-color:#2e8b57; color:white; }
+.foto-perfil {
+    display:block; margin:15px auto; width:120px; height:120px; object-fit:cover; border-radius:50%; border:3px solid #ffd700;
+}
 @media (max-width: 650px) {
-    .container { margin: 15px 15px 100px 15px; padding: 15px 20px 30px 20px; }
+    .container { margin:15px 15px 100px 15px; padding:15px 20px 30px 20px; }
 }
 </style>
 </head>
@@ -209,8 +175,13 @@ input[type=tel]:focus {
         <div class="msg-success"><?= h($sucesso) ?></div>
     <?php endif; ?>
 
-    <form method="post" action="">
+    <form method="post" action="" enctype="multipart/form-data">
         <input type="hidden" name="acao" value="atualizar_perfil" />
+        <input type="hidden" name="foto_atual" value="<?= h($professor['foto'] ?? '') ?>" />
+
+        <label>Foto de Perfil</label>
+        <img src="<?= h($professor['foto'] ?: 'imgs/logo.png') ?>" class="foto-perfil" alt="Foto Professor">
+        <input type="file" name="foto" accept=".jpg,.jpeg,.png,.webp" />
 
         <label for="nome">Nome </label>
         <input type="text" id="nome" name="nome" required maxlength="100" value="<?= h($professor['nome']) ?>" />
@@ -218,9 +189,7 @@ input[type=tel]:focus {
         <label for="data_nascimento">Data de Nascimento </label>
         <input type="date" id="data_nascimento" name="data_nascimento" required value="<?= h($professor['data_nascimento']) ?>" />
 
-        <label for="cpf">CPF </label>
-        <input type="text" id="cpf" name="cpf" required maxlength="14" placeholder="000.000.000-00" value="<?= h($professor['cpf']) ?>" />
-
+       
         <label for="email">E-mail </label>
         <input type="email" id="email" name="email" required maxlength="100" value="<?= h($professor['email']) ?>" />
 
@@ -232,7 +201,6 @@ input[type=tel]:focus {
 </div>
 
 <div id="nav-placeholder"></div>
-
 <script src="js/nav_professor.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -246,6 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
+  <div id="nav_professor-placeholder"></div>
+  <script src="../../js/nav.js"></script>
+    <?php include './nav_professor.php'; ?>
 
 </body>
 </html>

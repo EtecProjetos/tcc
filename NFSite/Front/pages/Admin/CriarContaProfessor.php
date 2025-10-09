@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../Back/conexao.php'; // ajuste o caminho conforme a localização real do arquivo
+include '../../../back/conexao.php'; // ajuste o caminho conforme a localização real do arquivo
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

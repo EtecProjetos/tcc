@@ -1,5 +1,5 @@
 <?php
-include '../back/conexao.php';
+include '../../../back/conexao.php';
 session_start();
 
 // Pega todos os alunos (caso não seja filtrado por turma ou todos os alunos)

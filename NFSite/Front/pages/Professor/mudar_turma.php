@@ -1,5 +1,5 @@
 <?php
-include '../back/conexao.php';
+include '../../../back/conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $aluno_id = $_POST['aluno_id'] ?? null;

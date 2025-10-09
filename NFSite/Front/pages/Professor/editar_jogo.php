@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../back/conexao.php';
+include '../../../back/conexao.php'; // Caminho corrigido
 
 // Verifica se o professor está logado
 if (!isset($_SESSION['professor_id'])) {
@@ -71,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $alert = 'success';
         $message = 'Jogo atualizado com sucesso!';
 
+        // Atualiza os dados exibidos
         $jogo['data'] = $data;
         $jogo['horario'] = $horario;
         $jogo['turma_id'] = $turma_id;
@@ -105,6 +106,14 @@ body {
     align-items:center;
     padding:20px 10px;
 }
+
+.logo-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+}
+.logo { width: 130px; height: auto; }
 
 h2{
     text-align:center;
@@ -145,10 +154,7 @@ input[type="date"], input[type="time"], input[type="text"], select{
     outline-offset:2px;
 }
 
-input[type="date"]:focus, input[type="time"]:focus, input[type="text"]:focus, select:focus{
-    border-color:#390062;
-    outline:none;
-}
+input:focus, select:focus{ border-color:#390062; outline:none; }
 
 button{
     padding:18px 0;
@@ -163,10 +169,7 @@ button{
     transition:transform 0.2s, background-color 0.3s;
 }
 
-button:hover{
-    background-color:#ffe345;
-    transform:translateY(-3px);
-}
+button:hover{ background-color:#ffe345; transform:translateY(-3px); }
 
 .back-link{
     display:inline-block;
@@ -179,7 +182,6 @@ button:hover{
     user-select:none;
     transition:color 0.3s ease;
 }
-
 .back-link:hover{color:#390062;}
 
 #alert-box{
@@ -202,38 +204,26 @@ button:hover{
 }
 
 #alert-box.show{opacity:1; pointer-events:auto;}
-
 #alert-box.success{background-color:#28a745;}
 #alert-box.nochange{background-color:#ffc107; color:#333;}
 
 @media(max-width:480px){
     .container{padding:20px;}
     h2{font-size:1.6rem;}
-    input[type="date"], input[type="time"], input[type="text"], select, button{font-size:14px;}
-}
-.logo-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 0;
-}
-
-.logo {
-    width: 130px;
-    height: auto;
+    input, select, button{font-size:14px;}
 }
 </style>
 </head>
 <body>
 
 <header class="logo-header">
-  <img src="imgs/logo.png" alt="New Football Logo" class="logo" />
+  <img src="../../imgs/logo.png" alt="New Football Logo" class="logo" />
 </header>
 
 <div class="container">
   <h2>Editar Jogo</h2>
 
-  <form method="POST" aria-label="Formulário para editar jogo">
+  <form method="POST">
     <label for="data">Data:</label>
     <input id="data" type="date" name="data" required value="<?= htmlspecialchars($jogo['data']) ?>">
 
@@ -244,7 +234,7 @@ button:hover{
     <select id="turma_id" name="turma_id" required>
       <option value="">Selecione a turma</option>
       <?php while($turma = $turmas->fetch_assoc()): ?>
-        <option value="<?= $turma['id'] ?>" <?= $turma['id'] == $jogo['turma_id'] ? 'selected' : '' ?>>
+        <option value="<?= $turma['id'] ?>" <?= $turma['id']==$jogo['turma_id']?'selected':'' ?>>
           <?= htmlspecialchars($turma['nome']) ?>
         </option>
       <?php endwhile; ?>
@@ -261,8 +251,8 @@ button:hover{
 
     <label for="tipo">Tipo de Jogo:</label>
     <select id="tipo" name="tipo" required>
-      <option value="Amistoso" <?= $jogo['tipo'] === 'Amistoso' ? 'selected' : '' ?>>Amistoso</option>
-      <option value="Oficial" <?= $jogo['tipo'] === 'Oficial' ? 'selected' : '' ?>>Oficial</option>
+      <option value="Amistoso" <?= $jogo['tipo']==='Amistoso'?'selected':'' ?>>Amistoso</option>
+      <option value="Oficial" <?= $jogo['tipo']==='Oficial'?'selected':'' ?>>Oficial</option>
     </select>
 
     <label for="logo_url">URL da Logo do Adversário:</label>

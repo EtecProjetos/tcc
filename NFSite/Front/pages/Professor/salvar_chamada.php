@@ -1,5 +1,5 @@
 <?php
-include '../back/conexao.php';
+include '../../../back/conexao.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

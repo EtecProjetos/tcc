@@ -1,9 +1,11 @@
 <?php
-include '../back/conexao.php';
-session_start();
+// Ajuste do caminho da conexão para o seu projeto
+include __DIR__ . '/../../../back/conexao.php'; 
 
+session_start();
 $professor_id = $_SESSION['professor_id'] ?? 1;
 
+// Busca as turmas
 $stmt = $conn->prepare("SELECT id, nome FROM turmas");
 $stmt->execute();
 $result = $stmt->get_result();
@@ -29,7 +31,6 @@ body {
     padding: 20px 10px;
     color: #4b0082;
 }
-
 .container {
     background: #fff;
     border-radius: 16px;
@@ -40,25 +41,21 @@ body {
     color: #4b0082;
     box-sizing: border-box;
 }
-
 h2 {
     text-align: center;
     font-weight: 700;
     margin-bottom: 25px;
     color: #6f2da8;
 }
-
 form {
     display: flex;
     flex-direction: column;
 }
-
 label {
     font-weight: 500;
     color: #4b0082;
     margin-top: 20px;
 }
-
 select, input[type="date"] {
     padding: 14px 16px;
     font-size: 16px;
@@ -68,13 +65,11 @@ select, input[type="date"] {
     margin-top: 8px;
     outline-offset: 2px;
 }
-
 select:focus, input[type="date"]:focus {
     border-color: #390062;
     outline: none;
     box-shadow: 0 0 5px #390062aa;
 }
-
 button, .btn-voltar {
     padding: 14px 0;
     font-size: 1.2rem;
@@ -86,37 +81,25 @@ button, .btn-voltar {
     width: 100%;
     margin-top: 25px;
 }
-
 button {
     background-color: #ffd700;
     color: #4b0082;
 }
-
 button:hover {
     background-color: #ffe345;
 }
-
 .btn-voltar {
-
     color: #4b0082;
     text-decoration: none;
     text-align: center;
 }
-
 .btn-voltar:hover {
     color: #000000;
 }
-
 @media (max-width: 480px) {
-    .container {
-        padding: 20px;
-    }
-    h2 {
-        font-size: 1.6rem;
-    }
-    select, input[type="date"], button, .btn-voltar {
-        font-size: 14px;
-    }
+    .container { padding: 20px; }
+    h2 { font-size: 1.6rem; }
+    select, input[type="date"], button, .btn-voltar { font-size: 14px; }
 }
 </style>
 </head>
@@ -124,21 +107,21 @@ button:hover {
 <div class="container">
 <a href="#" onclick="window.history.back();" class="btn-voltar">← Voltar</a>
 
-    <h2>Iniciar Chamada</h2>
-    <form action="chamada.php" method="GET" autocomplete="off">
-        <label for="turma_id">Turma:</label>
-        <select name="turma_id" id="turma_id" required>
-            <option value="" disabled selected>Selecione...</option>
-            <?php foreach ($turmas as $turma): ?>
-                <option value="<?= $turma['id'] ?>"><?= htmlspecialchars($turma['nome']) ?></option>
-            <?php endforeach; ?>
-        </select>
+<h2>Iniciar Chamada</h2>
+<form action="chamada.php" method="GET" autocomplete="off">
+    <label for="turma_id">Turma:</label>
+    <select name="turma_id" id="turma_id" required>
+        <option value="" disabled selected>Selecione...</option>
+        <?php foreach ($turmas as $turma): ?>
+            <option value="<?= $turma['id'] ?>"><?= htmlspecialchars($turma['nome']) ?></option>
+        <?php endforeach; ?>
+    </select>
 
-        <label for="data">Data da Aula:</label>
-        <input type="date" name="data" id="data" required>
+    <label for="data">Data da Aula:</label>
+    <input type="date" name="data" id="data" required>
 
-        <button type="submit">Continuar</button>
-    </form>
+    <button type="submit">Continuar</button>
+</form>
 </div>
 </body>
 </html>

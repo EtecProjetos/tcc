@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
 }
 
 // Inclui a conexão com o banco de dados
-include '../Back/conexao.php';
+include '../../../back/conexao.php';
 
 // Pega o ID do campeonato via GET
 $campeonato_id = isset($_GET['campeonato_id']) ? $_GET['campeonato_id'] : null;
