@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fredoka', sans-serif;
+    /* Degradê roxo em cima descendo para preto */
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+/* Header com logo */
+.logo-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+
+}
+
+.logo {
+    width: 130px;
+    height: auto;
+}
+
+/* Texto principal */
+.content {
+    padding: 30px 20px 80px; /* espaço inferior maior por causa da navbar */
+    text-align: center;
+}
+
+.intro-text h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.intro-text h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffe600;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+/* Responsivo */
+@media (min-width: 768px) {
+    .logo {
+        width: 160px;
+    }
+
+    .intro-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .intro-text h2 {
+        font-size: 2rem;
+    }
+}
+a{
+    text-decoration: none;
+}
+
+.turmas-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.turma-card {
+    background: linear-gradient(135deg, #8e2de2, #4a00e0);
+    border-radius: 16px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.turma-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+.turma-card h3 {
+    color: #FFD700;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.sem-turmas {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 30px;
+    color: #ffeb99;
+}

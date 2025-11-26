@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fredoka', sans-serif;
+    /* Degradê roxo em cima descendo para preto */
+    background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+/* Header com logo */
+.logo-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    background: transparent;
+    width: 100%;
+}
+
+.logo-header .logo {
+    width: 140px;
+    height: auto;
+}
+
+/* Texto principal */
+.content {
+    padding: 30px 20px 80px; /* espaço inferior maior por causa da navbar */
+    text-align: center;
+}
+
+.intro-text h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.intro-text h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffe600;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+/* Responsivo */
+@media (min-width: 768px) {
+    .logo {
+        width: 160px;
+    }
+
+    .intro-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .intro-text h2 {
+        font-size: 2rem;
+    }
+}
+a{
+    text-decoration: none;
+}

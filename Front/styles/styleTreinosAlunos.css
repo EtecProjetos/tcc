@@ -1,0 +1,177 @@
+
+    /* ===========================
+       Reset e estilo base
+    ============================ */
+    * { box-sizing: border-box; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: 'Fredoka', sans-serif;
+        background: linear-gradient(to bottom, #6a0dad 0%, #000000 100%);
+        color: #ffffff;
+    }
+
+    /* Conteúdo centralizado em wrapper para não quebrar o scroll */
+    .page-wrapper {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 40px 20px 120px; /* padding-bottom garante espaço para a navbar fixa */
+        min-height: 100vh;
+    }
+
+    /* Header com logo */
+    .logo-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+    }
+
+    .logo { width: 140px; height: auto; }
+
+    /* Título */
+    .title {
+        text-align: center;
+        margin: 6px 0 18px;
+    }
+    .title h2 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        margin: 0;
+        text-shadow: 0 0 6px rgba(255,255,255,0.25);
+        color: #fff;
+        letter-spacing: 0.6px;
+    }
+
+    /* Container dos treinos */
+    #treinos-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+    }
+
+    /* Card de treino */
+    .treino-box {
+        width: 100%;
+        max-width: 720px;
+        background: linear-gradient(135deg, #5a189a, #7a0ea4);
+        border-radius: 14px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+        transition: transform 0.18s ease, background 0.18s ease;
+        color: #fff;
+    }
+    .treino-box:hover { transform: translateY(-6px); cursor: pointer; }
+
+    /* Card destaque */
+    .treino-box.destaque {
+        background: linear-gradient(90deg, #ffdd57 0%, #ffd34d 100%);
+        color: #1d002c;
+        font-weight: 800;
+    }
+
+    /* Ícone do calendário */
+    .icon-calendario {
+        flex: 0 0 58px;
+        height: 58px;
+        width: 58px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: inherit;
+        box-shadow: inset 0 -6px 14px rgba(0,0,0,0.18);
+    }
+    .treino-box.destaque .icon-calendario { background: rgba(0,0,0,0.06); color: inherit; }
+
+    /* Conteúdo do card - centralizado verticalmente */
+    .treino-info {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    /* Blocos de data / dia / horário */
+    .info-block {
+        flex: 1 1 30%;
+        min-width: 90px;
+        text-align: center;
+        padding: 6px 8px;
+    }
+
+    .info-block .data {
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .info-block .dia {
+        font-size: 0.94rem;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        opacity: 0.95;
+    }
+
+    .info-block .horario {
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    /* Próximos label */
+    .proximos-label {
+        font-size: 1.15rem;
+        font-weight: 800;
+        margin-top: 6px;
+        margin-bottom: -2px;
+        color: #fff;
+        text-transform: uppercase;
+        text-shadow: 0 0 6px rgba(255,255,255,0.18);
+    }
+
+    /* Sem treinos */
+    .sem-treino {
+        width: 100%;
+        max-width: 720px;
+        background: rgba(255,255,255,0.08);
+        padding: 18px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    /* ===========================
+       Responsividade
+    ============================ */
+    @media (max-width: 820px) {
+        .treino-info { flex-direction: column; gap: 8px; align-items: center; }
+        .info-block { min-width: unset; width: 100%; }
+        .icon-calendario { width: 52px; height: 52px; font-size: 1.6rem; }
+        .treino-box { padding: 14px; }
+    }
+
+    @media (max-width: 420px) {
+        .title h2 { font-size: 1.4rem; }
+        .info-block .data { font-size: 1.3rem; }
+        .info-block .dia, .info-block .horario { font-size: 0.95rem; }
+        .icon-calendario { width: 48px; height: 48px; font-size: 1.4rem; }
+        .page-wrapper { padding-bottom: 140px; } /* mais espaço para navbar móvel */
+    }
+
+    /* ===========================
+       Navbar placeholder (espaço reservado)
+       Caso a sua nav fixa ocupe 70-90px, esse padding-bottom
+       evita que o último card fique escondido.
+    ============================ */
+   
