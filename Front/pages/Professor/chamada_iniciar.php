@@ -1,5 +1,5 @@
 <?php
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 session_start();
 
 $professor_id = $_SESSION['professor_id'] ?? 1;

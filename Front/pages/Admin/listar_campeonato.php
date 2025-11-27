@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     exit;
 }
 
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 
 // Corrigindo a consulta
 $sql = "SELECT * FROM campeonatos ORDER BY data_inicio ASC";

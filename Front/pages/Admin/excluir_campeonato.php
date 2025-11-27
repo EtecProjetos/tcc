@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 
 // Verifica se o admin está logado
 if(!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true){

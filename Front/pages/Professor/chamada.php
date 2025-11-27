@@ -1,5 +1,5 @@
 <?php
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 session_start();
 
 $turma_id = $_GET['turma_id'] ?? null;

@@ -6,7 +6,7 @@ if(!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true){
     exit;
 }
 
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 
 // Pega o ID do campeonato
 $id = intval($_GET['id'] ?? 0);

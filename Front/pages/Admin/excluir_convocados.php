@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     exit;
 }
 
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 
 $aluno_id = $_POST['aluno_id'] ?? null;
 $campeonato_id = $_POST['campeonato_id'] ?? null;

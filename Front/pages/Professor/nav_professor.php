@@ -3,8 +3,8 @@
 
 <div class="icon-navbar">
   <a href="home_professor.php"><div class="nav-icon"><i class="fas fa-home"></i></div></a>
-  <a href="Treinosprofessor.php"><div class="nav-icon"><i class="bi bi-cone-striped"></i></div></a>
-  <a href="Jogosprofessor.php"><div class="nav-icon"><i class="bi bi-dribbble"></i></div></a>
+  <a href="treinosprofessor.php"><div class="nav-icon"><i class="bi bi-cone-striped"></i></div></a>
+  <a href="jogosprofessor.php"><div class="nav-icon"><i class="bi bi-dribbble"></i></div></a>
   <a href="javascript:void(0)" id="btn-toggle-popup"><div class="nav-icon"><i class="fas fa-bars"></i></div></a>
 </div>
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../../back/conexao.php';
+include '../../../Back/conexao.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

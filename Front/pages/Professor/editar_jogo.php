@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../../back/conexao.php'; // Caminho corrigido
+include '../../../Back/conexao.php'; // Caminho corrigido
 
 // Verifica se o professor está logado
 if (!isset($_SESSION['professor_id'])) {
