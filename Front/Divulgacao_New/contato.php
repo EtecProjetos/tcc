@@ -94,11 +94,19 @@ session_start(); // Para gerenciamento de sessão, se necessário
 
   <br>
 
-  <footer class="footer-section">
-    <div class="container text-center pt-5">
-      <p>&copy; <?= date("Y") ?> All rights reserved | NEW FOOTBALL</p>
-    </div>
-  </footer>
+    <footer class="footer-section">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-12">
+            <div class="pt-5">
+              <p>
+                Copyright 2025 Direitos Reservados | NEW FOOTBALL
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
 
 </div>
 <!-- .site-wrap -->

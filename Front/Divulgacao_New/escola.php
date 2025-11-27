@@ -123,7 +123,7 @@ $ano_atual = date("Y"); // Ano atual dinâmico
           <div class="col-md-12">
             <div class="pt-5">
               <p>
-                &copy; <?= $ano_atual ?> All rights reserved | NEW FOOTBALL
+                Copyright 2025 Direitos Reservados | NEW FOOTBALL
               </p>
             </div>
           </div>

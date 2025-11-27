@@ -68,7 +68,7 @@ session_start(); // Para futuras funcionalidades, caso queira usar sessão
         font-size: 16px;
       }
       .container {
-        padding: 0 10px;
+        padding: 0 ;
       }
     }
   </style>
@@ -201,20 +201,19 @@ session_start(); // Para futuras funcionalidades, caso queira usar sessão
     </div>
   </div>
 
-  <footer style="margin-top: 20px;" class="footer-section">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-md-12">
-          <div class="pt-5">
-            <p> Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. Copyright &copy; 
-              <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with 
-              <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-            </p>
+    <footer class="footer-section">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-12">
+            <div class="pt-5">
+              <p>
+                Copyright 2025 Direitos Reservados | NEW FOOTBALL
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
 </div>
 <!-- .site-wrap -->

@@ -1,8 +1,0 @@
-﻿Back/conexao.php
-.env
-*.env
-vendor/
-node_modules/
-.vscode/
-.DS_Store
-Thumbs.db
