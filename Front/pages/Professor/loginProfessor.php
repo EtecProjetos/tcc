@@ -202,7 +202,7 @@
     </form>
 
     <div class="btn-group">
-        <button class="btn-aluno" onclick="location.href='../aluno/loginAluno.php'">
+        <button class="btn-aluno" onclick="location.href='../Aluno/loginAluno.php'">
             <i class="bi bi-person-fill"></i> Aluno
         </button>
         <button class="btn-professor">
