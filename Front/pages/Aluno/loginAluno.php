@@ -103,7 +103,7 @@ if (isset($_SESSION['aluno_id'])) {
         <button class="btn-aluno" onclick="location.reload()">
             <i class="bi bi-person-fill"></i> Aluno
         </button>
-        <button class="btn-professor" onclick="location.href='../professor/loginProfessor.php'">
+        <button class="btn-professor" onclick="location.href='../Professor/loginProfessor.php'">
             <i class="bi bi-person-badge-fill"></i> Professor
         </button>
     </div>
