@@ -194,9 +194,9 @@
             <input type="password" name="senha" placeholder="Senha" required autocomplete="current-password">
         </div>
 
-        <div class="forgot-link">
+        <!-- <div class="forgot-link">
             <a href="Esqueci_Senha.php">Esqueci minha senha</a>
-        </div>
+        </div> -->
 
         <button type="submit">Entrar</button>
     </form>
