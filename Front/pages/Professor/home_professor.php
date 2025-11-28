@@ -208,6 +208,5 @@ body {
     <?php endif; ?>
 </main>
 <?php include './nav_professor.php'; ?>
-<script src="../../js/nav_professor.js"></script>
 </body>
 </html>
