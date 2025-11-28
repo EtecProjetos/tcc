@@ -19,7 +19,6 @@ if(!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true){
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #000000, #4c0070);
     color: white;
     display: flex;
@@ -105,7 +104,7 @@ h1 {
         <p>Visualize todas as turmas cadastradas no sistema.</p>
     </div>
 
-    <div class="card" onclick="location.href='adicionar_aluno_turma.php'">
+    <div class="card" onclick="location.href='Adicionar_aluno_turma.php'">
         <h2>Adicionar Aluno à Turma</h2>
         <p>Vincule alunos a uma turma existente.</p>
     </div>

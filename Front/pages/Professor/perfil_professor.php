@@ -120,8 +120,8 @@ header.logo-header .logo { width: 180px; display: block; margin: 0 auto; }
 </div>
 
 
-<div id="nav_professor-placeholder"></div>
-<script src="../../js/nav.js"></script>
 <?php include './nav_professor.php'; ?>
+<script src="../../js/nav_professor.js"></script>
+
 </body>
 </html>

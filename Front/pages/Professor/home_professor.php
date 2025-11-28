@@ -181,7 +181,7 @@ body {
 </header>
 
 <!-- Navbar do professor -->
-<?php include './nav_professor.php'; ?>
+
 
 
 <main class="content">
@@ -207,7 +207,7 @@ body {
         <p class="sem-turmas">Você ainda não possui turmas cadastradas.</p>
     <?php endif; ?>
 </main>
-
+<?php include './nav_professor.php'; ?>
 <script src="../../js/nav_professor.js"></script>
 </body>
 </html>

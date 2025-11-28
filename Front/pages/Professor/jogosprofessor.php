@@ -243,9 +243,8 @@
             <?php endif; ?>
         </div>
     </div>
+<?php include './nav_professor.php'; ?>
+<script src="../../js/nav_professor.js"></script>
 
-    <div id="nav_professor-placeholder"></div>
-    <script src="../../js/nav.js"></script>
-    <?php include './nav_professor.php'; ?>
     </body>
     </html>

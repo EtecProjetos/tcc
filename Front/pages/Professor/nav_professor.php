@@ -132,24 +132,6 @@
     gap: 15px;
 }
 
-/* Botões do popup */
-/* ================= Popup Lateral ================= */
-.popup-menu {
-    position: fixed;
-    top: 0;
-    right: -250px; /* escondido inicialmente */
-    width: 250px;
-    height: 100vh;
-    background: linear-gradient(180deg, #5e2ca5, #7e57c2); /* apenas fundo do popup */
-    border-radius: 16px 0 0 16px; /* cantos arredondados à esquerda */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    transition: right 0.4s ease;
-    z-index: 1000;
-    box-shadow: -5px 0 12px rgba(0, 0, 0, 0.3); /* leve sombra lateral */
-}
-
 /* Abre o popup */
 .popup-menu.open {
     right: 0;
